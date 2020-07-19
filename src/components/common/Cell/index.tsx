@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { MdFlag } from "react-icons/md";
+import { FaBomb } from "react-icons/fa";
 
 const CellButton = styled.button`
   vertical-align: top;
@@ -35,9 +36,10 @@ const CellLabel = styled.div`
 interface Props {
   isRevealed: boolean;
   value: string;
+  onRevealCell: () => void;
 }
 
-const Cell: React.FC<Props> = ({ isRevealed, value }) => {
+const Cell: React.FC<Props> = ({ isRevealed, value, onRevealCell }) => {
   const [isFlagged, setIsFlagged] = useState(false);
 
   const handleToggleFlag = (
@@ -48,9 +50,9 @@ const Cell: React.FC<Props> = ({ isRevealed, value }) => {
   };
 
   return isRevealed ? (
-    <CellLabel>{value}</CellLabel>
+    <CellLabel>{value === "0" ? <FaBomb /> : value}</CellLabel>
   ) : (
-    <CellButton onContextMenu={handleToggleFlag}>
+    <CellButton onContextMenu={handleToggleFlag} onClick={onRevealCell}>
       {isFlagged ? <MdFlag /> : ""}
     </CellButton>
   );
