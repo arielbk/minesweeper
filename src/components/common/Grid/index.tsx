@@ -25,7 +25,6 @@ const Row: React.FC<RowProps> = ({ y, row, onRevealCell }) => {
         <Cell
           value={String(cell.value)}
           isRevealed={cell.isRevealed}
-          // isRevealed={true}
           onRevealCell={() => onRevealCell(x, y)}
         />
       ))}
@@ -33,16 +32,19 @@ const Row: React.FC<RowProps> = ({ y, row, onRevealCell }) => {
   );
 };
 
-const calculateDistance = (location: number[], mines: number[][]): number => {
-  let closest = 99;
+const calculateAdjacentMines = (loc: number[], mines: number[][]): number => {
+  let count = 0;
   mines.forEach((mine) => {
-    const distance = Math.max(
-      Math.abs(location[0] - mine[0]),
-      Math.abs(location[1] - mine[1])
-    );
-    if (closest > distance) closest = distance;
+    if (
+      (loc[0] === mine[0] ||
+        loc[0] - 1 === mine[0] ||
+        loc[0] + 1 === mine[0]) &&
+      (loc[1] === mine[1] || loc[1] - 1 === mine[1] || loc[1] + 1 === mine[1])
+    ) {
+      count += 1;
+    }
   });
-  return closest;
+  return count;
 };
 
 const Container = styled.div<{ width: number; height: number }>`
@@ -65,14 +67,15 @@ const Grid: React.FC<Props> = ({ width, height }) => {
 
   useEffect(() => {
     const mineCount = Math.floor((width * height) / 6);
-    const minesToPlace = [];
-    for (let i = 0; i < mineCount; i++) {
-      minesToPlace.push([
+    const minesToSet: number[][] = [];
+    while (minesToSet.length < mineCount) {
+      const toPush = [
         Math.floor(Math.random() * 10),
         Math.floor(Math.random() * 10),
-      ]);
+      ];
+      if (!minesToSet.includes(toPush)) minesToSet.push(toPush);
     }
-    setMines(minesToPlace);
+    setMines(minesToSet);
   }, [height, width]);
 
   useEffect(() => {
@@ -86,11 +89,12 @@ const Grid: React.FC<Props> = ({ width, height }) => {
     for (let x = 0; x < width; x++) {
       const row = [];
       for (let y = 0; y < height; y++) {
-        const distance: number = calculateDistance([x, y], mines);
-        row.push({ value: String(distance), isRevealed: false });
+        const adjacent: number = calculateAdjacentMines([x, y], mines);
+        row.push({ value: String(adjacent), isRevealed: false });
       }
       matrixGrid.push(row);
     }
+    mines.forEach((mine) => (matrixGrid[mine[0]][mine[1]].value = "B"));
     setMatrix(matrixGrid);
   }, [height, mines, width]);
 

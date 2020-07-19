@@ -30,6 +30,7 @@ const CellLabel = styled.div`
   width: 30px;
   height: 30px;
   background: #777;
+  border: 1px solid #555;
   color: #fff;
 `;
 
@@ -49,8 +50,11 @@ const Cell: React.FC<Props> = ({ isRevealed, value, onRevealCell }) => {
     setIsFlagged((prev) => !prev);
   };
 
+  let label: any = value;
+  if (value === "B") label = <FaBomb />;
+  if (value === "0") label = "";
   return isRevealed ? (
-    <CellLabel>{value === "0" ? <FaBomb /> : value}</CellLabel>
+    <CellLabel>{label}</CellLabel>
   ) : (
     <CellButton onContextMenu={handleToggleFlag} onClick={onRevealCell}>
       {isFlagged ? <MdFlag /> : ""}
