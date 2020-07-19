@@ -25,6 +25,7 @@ const Row: React.FC<RowProps> = ({ y, row, onRevealCell }) => {
         <Cell
           value={String(cell.value)}
           isRevealed={cell.isRevealed}
+          // isRevealed={true}
           onRevealCell={() => onRevealCell(x, y)}
         />
       ))}
@@ -32,10 +33,17 @@ const Row: React.FC<RowProps> = ({ y, row, onRevealCell }) => {
   );
 };
 
-// const calculateDistance = (location: number[], mines: number[][]): number => {
-//   let lowest;
-
-// };
+const calculateDistance = (location: number[], mines: number[][]): number => {
+  let closest = 99;
+  mines.forEach((mine) => {
+    const distance = Math.max(
+      Math.abs(location[0] - mine[0]),
+      Math.abs(location[1] - mine[1])
+    );
+    if (closest > distance) closest = distance;
+  });
+  return closest;
+};
 
 const Container = styled.div<{ width: number; height: number }>`
   margin: 2rem auto;
@@ -56,7 +64,7 @@ const Grid: React.FC<Props> = ({ width, height }) => {
   const [mines, setMines] = useState([[0, 1]]);
 
   useEffect(() => {
-    const mineCount = Math.floor((width * height) / 3);
+    const mineCount = Math.floor((width * height) / 6);
     const minesToPlace = [];
     for (let i = 0; i < mineCount; i++) {
       minesToPlace.push([
@@ -78,11 +86,11 @@ const Grid: React.FC<Props> = ({ width, height }) => {
     for (let x = 0; x < width; x++) {
       const row = [];
       for (let y = 0; y < height; y++) {
-        row.push({ value: "", isRevealed: false });
+        const distance: number = calculateDistance([x, y], mines);
+        row.push({ value: String(distance), isRevealed: false });
       }
       matrixGrid.push(row);
     }
-    mines.forEach((mine) => (matrixGrid[mine[0]][mine[1]].value = "0"));
     setMatrix(matrixGrid);
   }, [height, mines, width]);
 
