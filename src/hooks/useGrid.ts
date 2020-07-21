@@ -16,12 +16,14 @@ const calculateAdjacentMines = (loc: number[], mines: number[][]): string => {
 };
 
 const useGrid = ({ width, height }: { width: number; height: number }) => {
-  // stores a 2d array, number of mines or mine
+  // 2d array, number of mines or mine
   const [valueGrid, setValueGrid] = useState<string[][]>([[]]);
-  // stores a 2d array, number of mines
+  // 2d array, number of mines
   const [isRevealedGrid, setIsRevealedGrid] = useState<boolean[][]>(
     new Array(height).fill(new Array(width).fill(false))
   );
+  // 2d array, safe areas
+  const [safeArea, setSafeArea] = useState<number[][]>([[]]);
 
   // initializes grid values
   useEffect(() => {
@@ -38,39 +40,56 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
     }
 
     // populate value grid
-    const valuesToSet = [];
+    const valuesToSet: string[][] = [];
     for (let x = 0; x < width; x++) {
-      const row = [];
+      const row: string[] = [];
       for (let y = 0; y < height; y++) {
-        if (minesToSet.includes([x, y])) {
-          row.push("M");
-        } else {
-          const adjacentMines = calculateAdjacentMines([x, y], minesToSet);
-          row.push(adjacentMines);
-        }
+        const adjacentMines = calculateAdjacentMines([x, y], minesToSet);
+        row.push(adjacentMines);
       }
       valuesToSet.push(row);
     }
+    // lay mines
+    minesToSet.forEach((mine) => (valuesToSet[mine[0]][mine[1]] = "M"));
+
     setValueGrid(valuesToSet);
   }, [height, width]);
 
-  const handleRevealCell = (x: number, y: number) => {
-    if (isRevealedGrid[y][x] === true) return;
-    // if (valueGrid[y][x] === "0") {
-    //   if (x - 1 >= 0) handleRevealCell(x - 1, y);
-    //   if (x + 1 < width) handleRevealCell(x + 1, y);
-    //   if (y - 1 >= 0) handleRevealCell(x, y - 1);
-    //   if (y + 1 < height) handleRevealCell(x, y + 1);
-    // }
+  // calculates all contiguous safe areas
+  useEffect(() => {
+    // if (valueGrid.length < 2) return;
+    // const safeAreas: string[][][] = [];
+    // valueGrid.forEach((row) => {
+    //   row.forEach((cell) => {
+    //     if (cell !== "0") return;
+    //     let isCounted = false;
+    //     // safe area contains the current cell somewhere
+    //     safeArea.some((row) =>
+    //       row.some((col) => col[0] == cell && col[1] == row)
+    //     );
+    //   });
+    // });
+  }, [safeArea, valueGrid]);
+
+  // sets cells to revealed
+  const handleRevealCells = (cells: number[][]): void => {
     const isRevealedCopy = isRevealedGrid.map((row) => row.map((col) => col));
-    isRevealedCopy[y][x] = true;
+    cells.forEach(([x, y]) => {
+      isRevealedCopy[y][x] = true;
+    });
     setIsRevealedGrid(isRevealedCopy);
+  };
+
+  // determines what to do with selected cell
+  const handleSelectCell = (x: number, y: number) => {
+    if (isRevealedGrid[y][x] === true) return;
+    if (valueGrid[y][x] !== "0") return handleRevealCells([[x, y]]);
   };
 
   return {
     valueGrid,
     isRevealedGrid,
-    handleRevealCell,
+    handleSelectCell,
   };
 };
 

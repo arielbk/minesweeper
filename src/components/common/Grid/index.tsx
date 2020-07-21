@@ -50,12 +50,11 @@ interface Props {
 }
 
 const Grid: React.FC<Props> = ({ width, height }) => {
-  const { valueGrid, isRevealedGrid, handleRevealCell } = useGrid({
+  const { valueGrid, isRevealedGrid, handleSelectCell } = useGrid({
     width,
     height,
   });
 
-  if (!valueGrid) return <>Loading... </>;
   return (
     <Container width={width * 30} height={height * 30}>
       {valueGrid.map((row, i) => (
@@ -64,7 +63,7 @@ const Grid: React.FC<Props> = ({ width, height }) => {
           valueRow={row}
           isRevealedRow={isRevealedGrid[i]}
           key={i}
-          onRevealCell={handleRevealCell}
+          onRevealCell={handleSelectCell}
         />
       ))}
     </Container>

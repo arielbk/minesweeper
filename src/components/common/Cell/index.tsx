@@ -51,7 +51,7 @@ const Cell: React.FC<Props> = ({ isRevealed, value, onRevealCell }) => {
   };
 
   let label: any = value;
-  if (value === "B") label = <FaBomb />;
+  if (value === "M") label = <FaBomb />;
   if (value === "0") label = "";
   return isRevealed ? (
     <CellLabel>{label}</CellLabel>
