@@ -22,8 +22,6 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
   const [isRevealedGrid, setIsRevealedGrid] = useState<boolean[][]>(
     new Array(height).fill(new Array(width).fill(false))
   );
-  // 2d array, safe areas
-  const [safeArea, setSafeArea] = useState<number[][]>([[]]);
 
   // initializes grid values
   useEffect(() => {
@@ -55,21 +53,92 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
     setValueGrid(valuesToSet);
   }, [height, width]);
 
-  // calculates all contiguous safe areas
-  useEffect(() => {
-    // if (valueGrid.length < 2) return;
-    // const safeAreas: string[][][] = [];
-    // valueGrid.forEach((row) => {
-    //   row.forEach((cell) => {
-    //     if (cell !== "0") return;
-    //     let isCounted = false;
-    //     // safe area contains the current cell somewhere
-    //     safeArea.some((row) =>
-    //       row.some((col) => col[0] == cell && col[1] == row)
-    //     );
-    //   });
-    // });
-  }, [safeArea, valueGrid]);
+  // find an area of safe cells (including border cells)
+  const findContiguousArea = (x: number, y: number): number[][] => {
+    const areaCells: number[][] = [];
+    let currentX = x;
+    let currentY = y;
+
+    // add touching coordinates of the current line
+    while (true) {
+      // check the left side
+      if (valueGrid[currentY][currentX] === "0") areaCells.push([currentX, y]);
+      else {
+        areaCells.push([currentX, y]);
+        break;
+      }
+      currentX -= 1;
+    }
+    currentX = x;
+    while (true) {
+      // check the right side
+      if (valueGrid[currentY][currentX] === "0") areaCells.push([currentX, y]);
+      else {
+        areaCells.push([currentX, y]);
+        break;
+      }
+      currentX += 1;
+    }
+
+    // initialise with the origin row
+    let prevAreaRow: number[][] = areaCells;
+    // if checking upper is done
+    let isUpperDone = false;
+    // start one line above origin
+    currentY -= 1;
+
+    // iterate through upper then lower rows until none are touching
+    while (prevAreaRow.length || !isUpperDone) {
+      // current row area to push to
+      let rowArea: number[][] = [];
+
+      // any free cells on current row
+      let rowFree: number[][] = [];
+      if (valueGrid[currentY])
+        valueGrid[currentY].forEach((val, i) => {
+          if (val === "0") rowFree.push([i, currentY]);
+        });
+
+      rowFree.forEach((freeCell) => {
+        const isArea = prevAreaRow.some(
+          (areaCell) =>
+            (freeCell[0] === areaCell[0] ||
+              freeCell[0] === areaCell[0] - 1 ||
+              freeCell[0] === areaCell[0] + 1) &&
+            (freeCell[1] === areaCell[1] ||
+              freeCell[1] === areaCell[1] - 1 ||
+              freeCell[1] === areaCell[1] + 1)
+        );
+        if (isArea) rowArea.push(freeCell);
+      });
+
+      // push the current previous row into the area and create a new prev
+      prevAreaRow.forEach((cell) => {
+        areaCells.push(cell);
+        const [x, y] = cell;
+        // if (x > 0 && y > 0) areaCells.push([x - 1, y - 1]);
+        // if (y > 0) areaCells.push([x, y - 1]);
+        // if (x < width - 1 && y > 0) areaCells.push([x + 1, y - 1]);
+        // if (x > 0) areaCells.push([x - 1, y]);
+        // if (x < width - 1) areaCells.push([x + 1, y]);
+        // if (x > 0 && y < height - 1) areaCells.push([x - 1, y + 1]);
+        // if (y < height - 1) areaCells.push([x, y + 1]);
+        // if (x < width - 1 && y < height - 1) areaCells.push([x + 1, y + 1]);
+      });
+
+      if (!rowArea.length && !isUpperDone) {
+        isUpperDone = true;
+        prevAreaRow = areaCells;
+      } else {
+        prevAreaRow = rowArea;
+      }
+
+      if (isUpperDone) currentY += 1;
+      else currentY -= 1;
+    }
+
+    return areaCells;
+  };
 
   // sets cells to revealed
   const handleRevealCells = (cells: number[][]): void => {
@@ -84,6 +153,8 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
   const handleSelectCell = (x: number, y: number) => {
     if (isRevealedGrid[y][x] === true) return;
     if (valueGrid[y][x] !== "0") return handleRevealCells([[x, y]]);
+    const toReveal = findContiguousArea(x, y);
+    handleRevealCells(toReveal);
   };
 
   return {
