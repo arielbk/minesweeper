@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 
-const calculateAdjacentMines = (loc: number[], mines: number[][]): string => {
+const calculateAdjacentMines = (
+  loc: number[],
+  mines: [number, number][]
+): string => {
   let count = 0;
   mines.forEach((mine) => {
     if (
@@ -15,6 +18,20 @@ const calculateAdjacentMines = (loc: number[], mines: number[][]): string => {
   return String(count);
 };
 
+const isCoordinateAdjacent = (
+  center: [number, number],
+  toCheck: [number, number]
+): boolean => {
+  return (
+    (toCheck[0] === center[0] ||
+      toCheck[0] === center[0] - 1 ||
+      toCheck[0] === center[0] + 1) &&
+    (toCheck[1] === center[1] ||
+      toCheck[1] === center[1] - 1 ||
+      toCheck[1] === center[1] + 1)
+  );
+};
+
 const useGrid = ({ width, height }: { width: number; height: number }) => {
   // 2d array, number of mines or mine
   const [valueGrid, setValueGrid] = useState<string[][]>([[]]);
@@ -27,14 +44,21 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
   useEffect(() => {
     // determine mine locations
     const mineCount = Math.floor((width * height) / 6);
-    const minesToSet: number[][] = [];
+    const minesToSet: [number, number][] = [];
 
     while (minesToSet.length < mineCount) {
-      const mineLocation = [
+      const mineLocation: [number, number] = [
         Math.floor(Math.random() * width),
         Math.floor(Math.random() * height),
       ];
-      if (!minesToSet.includes(mineLocation)) minesToSet.push(mineLocation);
+      // ensure there are no duplicate mines
+      if (
+        !minesToSet.some(
+          (mineToSet) =>
+            mineToSet[0] === mineLocation[0] && mineToSet[1] === mineLocation[1]
+        )
+      )
+        minesToSet.push(mineLocation);
     }
 
     // populate value grid
@@ -54,77 +78,52 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
   }, [height, width]);
 
   // find an area of safe cells (including border cells)
-  const findContiguousArea = (x: number, y: number): number[][] => {
-    const areaCells: number[][] = [];
-    let currentX = x;
-    let currentY = y;
+  const findContiguousArea = (x: number, y: number): [number, number][] => {
+    const areaCells: [number, number][] = [];
+    let scanX = x;
 
     // add touching coordinates of the current line
+    let isLeftChecked = false;
     while (true) {
       // check the left side
-      if (valueGrid[currentY][currentX] === "0") areaCells.push([currentX, y]);
+      if (valueGrid[y][scanX] === "0") areaCells.push([scanX, y]);
+      else if (isLeftChecked) break;
       else {
-        areaCells.push([currentX, y]);
-        break;
+        scanX = x;
+        isLeftChecked = true;
       }
-      currentX -= 1;
-    }
-    currentX = x;
-    while (true) {
-      // check the right side
-      if (valueGrid[currentY][currentX] === "0") areaCells.push([currentX, y]);
-      else {
-        areaCells.push([currentX, y]);
-        break;
-      }
-      currentX += 1;
+      if (isLeftChecked) scanX += 1;
+      else scanX -= 1;
     }
 
-    // initialise with the origin row
-    let prevAreaRow: number[][] = areaCells;
+    // scan upper and lower lines for touching coordinates
+    let prevAreaRow: [number, number][] = areaCells;
+    // start one line above toCheck
+    let scanY = y - 1;
     // if checking upper is done
     let isUpperDone = false;
-    // start one line above origin
-    currentY -= 1;
 
     // iterate through upper then lower rows until none are touching
     while (prevAreaRow.length || !isUpperDone) {
       // current row area to push to
-      let rowArea: number[][] = [];
+      let rowArea: [number, number][] = [];
 
       // any free cells on current row
-      let rowFree: number[][] = [];
-      if (valueGrid[currentY])
-        valueGrid[currentY].forEach((val, i) => {
-          if (val === "0") rowFree.push([i, currentY]);
+      let rowFree: [number, number][] = [];
+      if (valueGrid[scanY])
+        valueGrid[scanY].forEach((val, i) => {
+          if (val === "0") rowFree.push([i, scanY]);
         });
 
       rowFree.forEach((freeCell) => {
-        const isArea = prevAreaRow.some(
-          (areaCell) =>
-            (freeCell[0] === areaCell[0] ||
-              freeCell[0] === areaCell[0] - 1 ||
-              freeCell[0] === areaCell[0] + 1) &&
-            (freeCell[1] === areaCell[1] ||
-              freeCell[1] === areaCell[1] - 1 ||
-              freeCell[1] === areaCell[1] + 1)
+        const isArea = prevAreaRow.some((areaCell) =>
+          isCoordinateAdjacent(areaCell, freeCell)
         );
         if (isArea) rowArea.push(freeCell);
       });
 
       // push the current previous row into the area and create a new prev
-      prevAreaRow.forEach((cell) => {
-        areaCells.push(cell);
-        const [x, y] = cell;
-        // if (x > 0 && y > 0) areaCells.push([x - 1, y - 1]);
-        // if (y > 0) areaCells.push([x, y - 1]);
-        // if (x < width - 1 && y > 0) areaCells.push([x + 1, y - 1]);
-        // if (x > 0) areaCells.push([x - 1, y]);
-        // if (x < width - 1) areaCells.push([x + 1, y]);
-        // if (x > 0 && y < height - 1) areaCells.push([x - 1, y + 1]);
-        // if (y < height - 1) areaCells.push([x, y + 1]);
-        // if (x < width - 1 && y < height - 1) areaCells.push([x + 1, y + 1]);
-      });
+      prevAreaRow.forEach((cell) => areaCells.push(cell));
 
       if (!rowArea.length && !isUpperDone) {
         isUpperDone = true;
@@ -133,15 +132,15 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
         prevAreaRow = rowArea;
       }
 
-      if (isUpperDone) currentY += 1;
-      else currentY -= 1;
+      if (isUpperDone) scanY += 1;
+      else scanY -= 1;
     }
 
     return areaCells;
   };
 
   // sets cells to revealed
-  const handleRevealCells = (cells: number[][]): void => {
+  const handleRevealCells = (cells: [number, number][]): void => {
     const isRevealedCopy = isRevealedGrid.map((row) => row.map((col) => col));
     cells.forEach(([x, y]) => {
       isRevealedCopy[y][x] = true;
