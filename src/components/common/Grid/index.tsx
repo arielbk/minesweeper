@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import Cell from "../Cell";
 import styled from "styled-components";
+import { GameContext } from "../../../contexts/GameContext";
 import useGrid from "../../../hooks/useGrid";
 
 const StyledRow = styled.div`
@@ -49,14 +50,15 @@ interface Props {
   height: number;
 }
 
-const Grid: React.FC<Props> = ({ width, height }) => {
+const Grid: React.FC = () => {
+  const { gridWidth, gridHeight } = useContext(GameContext);
   const { valueGrid, isRevealedGrid, handleSelectCell } = useGrid({
-    width,
-    height,
+    width: gridWidth,
+    height: gridHeight,
   });
 
   return (
-    <Container width={width * 30} height={height * 30}>
+    <Container width={gridWidth * 30} height={gridHeight * 30}>
       {valueGrid.map((row, i) => (
         <Row
           y={i}
