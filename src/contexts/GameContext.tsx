@@ -14,7 +14,7 @@ export const GameContext = createContext({
   /**
    * Functions
    */
-  handleStartStop: () => {},
+  handleRestart: () => {},
 });
 
 export const GameProvider: React.FC = ({ children }) => {
@@ -25,7 +25,10 @@ export const GameProvider: React.FC = ({ children }) => {
     if (isRunning) setStartTime(Date.now());
   }, [isRunning]);
 
-  const handleStartStop = () => setIsRunning((prev) => !prev);
+  const handleRestart = () => {
+    setIsRunning(true);
+    setStartTime(Date.now());
+  };
 
   return (
     <GameContext.Provider
@@ -35,7 +38,7 @@ export const GameProvider: React.FC = ({ children }) => {
         currentScore: 0,
         gridWidth: 15,
         gridHeight: 15,
-        handleStartStop,
+        handleRestart,
       }}
     >
       <>{children}</>

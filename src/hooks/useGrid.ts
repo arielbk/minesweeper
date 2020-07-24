@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { GameContext } from "../contexts/GameContext";
 
 const calculateAdjacentMines = (
   loc: number[],
@@ -39,9 +40,13 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
   const [isRevealedGrid, setIsRevealedGrid] = useState<boolean[][]>(
     new Array(height).fill(new Array(width).fill(false))
   );
+  // game context
+  const { startTime } = useContext(GameContext);
 
   // initializes grid values
-  useEffect(() => {
+  const initializeGrid = () => {
+    setIsRevealedGrid(new Array(height).fill(new Array(width).fill(false)));
+
     // determine mine locations
     const mineCount = Math.floor((width * height) / 6);
     const minesToSet: [number, number][] = [];
@@ -75,7 +80,9 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
     minesToSet.forEach((mine) => (valuesToSet[mine[0]][mine[1]] = "M"));
 
     setValueGrid(valuesToSet);
-  }, [height, width]);
+  };
+
+  useEffect(initializeGrid, [startTime]);
 
   // find an area of safe cells (including border cells)
   const findContiguousArea = (x: number, y: number): [number, number][] => {

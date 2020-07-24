@@ -45,11 +45,6 @@ const Container = styled.div<{ width: number; height: number }>`
   height: ${({ height }) => height}px;
 `;
 
-interface Props {
-  width: number;
-  height: number;
-}
-
 const Grid: React.FC = () => {
   const { gridWidth, gridHeight } = useContext(GameContext);
   const { valueGrid, isRevealedGrid, handleSelectCell } = useGrid({
