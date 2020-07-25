@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
 import Cell from "../Cell";
 import styled from "styled-components";
-import { GameContext } from "../../../contexts/GameContext";
-import useGrid from "../../../hooks/useGrid";
+import { GameContext } from "contexts/GameContext";
+import useValueGrid from "hooks/useValueGrid";
+import useIsRevealedGrid from "hooks/useIsRevealedGrid";
+import { findContiguousArea } from "utilities/mineCoordinates";
 
 const StyledRow = styled.div`
   display: block;
@@ -47,10 +49,20 @@ const Container = styled.div<{ width: number; height: number }>`
 
 const Grid: React.FC = () => {
   const { gridWidth, gridHeight } = useContext(GameContext);
-  const { valueGrid, isRevealedGrid, handleSelectCell } = useGrid({
+  const { valueGrid } = useValueGrid({
     width: gridWidth,
     height: gridHeight,
   });
+  const { isRevealedGrid, handleRevealCells } = useIsRevealedGrid();
+  // todo: flag grid hook
+
+  // determines what to do with selected cell
+  const handleSelectCell = (x: number, y: number) => {
+    if (isRevealedGrid[y][x] === true) return;
+    if (valueGrid[y][x] !== "0") return handleRevealCells([[x, y]]);
+    const toReveal = findContiguousArea([x, y], valueGrid);
+    handleRevealCells(toReveal);
+  };
 
   return (
     <Container width={gridWidth * 30} height={gridHeight * 30}>
