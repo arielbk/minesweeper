@@ -1,8 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import {
-  calculateAdjacentMines,
-  findContiguousArea,
-} from "utilities/mineCoordinates";
+import { calculateAdjacentMines } from "utilities/mineCoordinates";
 import { GameContext } from "contexts/GameContext";
 
 const useGrid = ({ width, height }: { width: number; height: number }) => {

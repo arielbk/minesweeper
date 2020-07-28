@@ -38,25 +38,24 @@ interface Props {
   isRevealed: boolean;
   value: string;
   onRevealCell: () => void;
+  isFlagged: boolean;
+  onFlagCell: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-const Cell: React.FC<Props> = ({ isRevealed, value, onRevealCell }) => {
-  const [isFlagged, setIsFlagged] = useState(false);
-
-  const handleToggleFlag = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-    setIsFlagged((prev) => !prev);
-  };
-
+const Cell: React.FC<Props> = ({
+  isRevealed,
+  value,
+  onRevealCell,
+  isFlagged,
+  onFlagCell,
+}) => {
   let label: any = value;
   if (value === "M") label = <FaBomb />;
   if (value === "0") label = "";
   return isRevealed ? (
     <CellLabel>{label}</CellLabel>
   ) : (
-    <CellButton onContextMenu={handleToggleFlag} onClick={onRevealCell}>
+    <CellButton onContextMenu={onFlagCell} onClick={onRevealCell}>
       {isFlagged ? <MdFlag /> : ""}
     </CellButton>
   );

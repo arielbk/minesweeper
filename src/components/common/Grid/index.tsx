@@ -5,6 +5,7 @@ import { GameContext } from "contexts/GameContext";
 import useValueGrid from "hooks/useValueGrid";
 import useIsRevealedGrid from "hooks/useIsRevealedGrid";
 import { findContiguousArea } from "utilities/mineCoordinates";
+import useFlagGrid from "hooks/useFlagGrid";
 
 const StyledRow = styled.div`
   display: block;
@@ -18,6 +19,8 @@ interface RowProps {
   valueRow: string[];
   isRevealedRow: boolean[];
   onRevealCell: (x: number, y: number) => void;
+  flagRow: boolean[];
+  onFlagCell: (cell: [number, number]) => void;
 }
 
 const Row: React.FC<RowProps> = ({
@@ -25,6 +28,8 @@ const Row: React.FC<RowProps> = ({
   valueRow,
   isRevealedRow,
   onRevealCell,
+  flagRow,
+  onFlagCell,
 }) => {
   return (
     <StyledRow>
@@ -32,6 +37,11 @@ const Row: React.FC<RowProps> = ({
         <Cell
           value={cell}
           isRevealed={isRevealedRow[x]}
+          isFlagged={flagRow[x]}
+          onFlagCell={(e) => {
+            e.preventDefault();
+            onFlagCell([x, y]);
+          }}
           onRevealCell={() => onRevealCell(x, y)}
         />
       ))}
@@ -54,7 +64,7 @@ const Grid: React.FC = () => {
     height: gridHeight,
   });
   const { isRevealedGrid, handleRevealCells } = useIsRevealedGrid();
-  // todo: flag grid hook
+  const { flagGrid, handleFlagCell } = useFlagGrid();
 
   // determines what to do with selected cell
   const handleSelectCell = (x: number, y: number) => {
@@ -71,6 +81,8 @@ const Grid: React.FC = () => {
           y={i}
           valueRow={row}
           isRevealedRow={isRevealedGrid[i]}
+          flagRow={flagGrid[i]}
+          onFlagCell={handleFlagCell}
           key={i}
           onRevealCell={handleSelectCell}
         />
