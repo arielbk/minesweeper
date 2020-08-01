@@ -30,8 +30,6 @@ const useIsRevealedGrid = ({
     setIsRevealedGrid(isRevealedCopy);
   };
 
-  console.log("start time from revealed grid", startTime);
-
   return {
     isRevealedGrid,
     handleRevealCells,

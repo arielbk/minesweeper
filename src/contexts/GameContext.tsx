@@ -8,7 +8,7 @@ export const GameContext = createContext({
   /**
    * State
    */
-  isRunning: false,
+  isDead: false,
   startTime: 0,
   currentScore: 0,
   // todo: these could go in a settings context?
@@ -29,7 +29,7 @@ export const GameContext = createContext({
 });
 
 export const GameProvider: React.FC = ({ children }) => {
-  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [isDead, setIsDead] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
   const gridWidth = 15;
@@ -43,18 +43,21 @@ export const GameProvider: React.FC = ({ children }) => {
 
   // is running becomes true, a new start time is set
   useEffect(() => {
-    if (isRunning) setStartTime(Date.now());
-  }, [isRunning]);
+    if (!isDead) setStartTime(Date.now());
+  }, [isDead]);
 
   const handleRestart = () => {
-    setIsRunning(true);
+    setIsDead(false);
     setStartTime(Date.now());
   };
 
   // determines what to do with selected cell
   const handleSelectCell = (cell: [number, number]) => {
     const [x, y] = cell;
-    if (isRevealedGrid[y][x] === true) return;
+    // set initial start time
+    if (!startTime) setStartTime(Date.now());
+    if (isDead || isRevealedGrid[y][x] === true) return;
+    if (valueGrid[y][x] === "M") setIsDead(true);
     if (valueGrid[y][x] !== "0") return handleRevealCells([[x, y]]);
     const toReveal = findContiguousArea([x, y], valueGrid);
     handleRevealCells(toReveal);
@@ -63,7 +66,7 @@ export const GameProvider: React.FC = ({ children }) => {
   return (
     <GameContext.Provider
       value={{
-        isRunning,
+        isDead,
         isMouseDown,
         startTime,
         currentScore: 0,

@@ -22,16 +22,16 @@ const CellButton = styled.button`
   }
 `;
 
-const CellLabel = styled.div`
+const CellLabel = styled.div<{ isMine: boolean }>`
   vertical-align: top;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 30px;
   height: 30px;
-  background: #777;
   border: 1px solid #555;
-  color: #fff;
+  background: ${({ isMine }) => (isMine ? "red" : "#777")};
+  color: ${({ isMine }) => (isMine ? "#000" : "#fff")};
 `;
 
 interface Props {
@@ -53,7 +53,7 @@ const Cell: React.FC<Props> = ({
   if (value === "M") label = <FaBomb />;
   if (value === "0") label = "";
   return isRevealed ? (
-    <CellLabel>{label}</CellLabel>
+    <CellLabel isMine={value === "M"}>{label}</CellLabel>
   ) : (
     <CellButton onContextMenu={onFlagCell} onClick={onSelectCell}>
       {isFlagged ? <MdFlag /> : ""}
