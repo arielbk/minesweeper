@@ -1,8 +1,16 @@
-import { useState, useEffect, useContext } from "react";
-import { GameContext } from "contexts/GameContext";
+import { useState, useEffect } from "react";
 
-const useIsRevealedGrid = () => {
-  const { gridWidth, gridHeight, startTime } = useContext(GameContext);
+interface GridParams {
+  gridWidth: number;
+  gridHeight: number;
+  startTime: number;
+}
+
+const useIsRevealedGrid = ({
+  gridWidth,
+  gridHeight,
+  startTime,
+}: GridParams) => {
   const [isRevealedGrid, setIsRevealedGrid] = useState<boolean[][]>(
     new Array(gridHeight).fill(new Array(gridWidth).fill(false))
   );
@@ -21,6 +29,8 @@ const useIsRevealedGrid = () => {
     });
     setIsRevealedGrid(isRevealedCopy);
   };
+
+  console.log("start time from revealed grid", startTime);
 
   return {
     isRevealedGrid,

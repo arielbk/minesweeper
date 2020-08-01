@@ -37,7 +37,7 @@ const CellLabel = styled.div`
 interface Props {
   isRevealed: boolean;
   value: string;
-  onRevealCell: () => void;
+  onSelectCell: () => void;
   isFlagged: boolean;
   onFlagCell: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
@@ -45,7 +45,7 @@ interface Props {
 const Cell: React.FC<Props> = ({
   isRevealed,
   value,
-  onRevealCell,
+  onSelectCell,
   isFlagged,
   onFlagCell,
 }) => {
@@ -55,7 +55,7 @@ const Cell: React.FC<Props> = ({
   return isRevealed ? (
     <CellLabel>{label}</CellLabel>
   ) : (
-    <CellButton onContextMenu={onFlagCell} onClick={onRevealCell}>
+    <CellButton onContextMenu={onFlagCell} onClick={onSelectCell}>
       {isFlagged ? <MdFlag /> : ""}
     </CellButton>
   );

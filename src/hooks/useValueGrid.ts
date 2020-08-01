@@ -1,23 +1,26 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { calculateAdjacentMines } from "utilities/mineCoordinates";
-import { GameContext } from "contexts/GameContext";
 
-const useGrid = ({ width, height }: { width: number; height: number }) => {
+interface GridParams {
+  gridWidth: number;
+  gridHeight: number;
+  startTime: number;
+}
+
+const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
   // 2d array, number of adjacent mines
   const [valueGrid, setValueGrid] = useState<string[][]>([[]]);
-  // game context
-  const { startTime } = useContext(GameContext);
 
   // initializes grid values
   const initializeGrid = () => {
     // determine mine locations
-    const mineCount = Math.floor((width * height) / 6);
+    const mineCount = Math.floor((gridWidth * gridHeight) / 6);
     const minesToSet: [number, number][] = [];
 
     while (minesToSet.length < mineCount) {
       const mineLocation: [number, number] = [
-        Math.floor(Math.random() * width),
-        Math.floor(Math.random() * height),
+        Math.floor(Math.random() * gridWidth),
+        Math.floor(Math.random() * gridHeight),
       ];
       // ensure there are no duplicate mines
       if (
@@ -31,9 +34,9 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
 
     // populate value grid
     const valuesToSet: string[][] = [];
-    for (let x = 0; x < width; x++) {
+    for (let x = 0; x < gridWidth; x++) {
       const row: string[] = [];
-      for (let y = 0; y < height; y++) {
+      for (let y = 0; y < gridHeight; y++) {
         const adjacentMines = calculateAdjacentMines([x, y], minesToSet);
         row.push(adjacentMines);
       }
@@ -52,4 +55,4 @@ const useGrid = ({ width, height }: { width: number; height: number }) => {
   };
 };
 
-export default useGrid;
+export default useValueGrid;

@@ -1,8 +1,12 @@
-import { useState, useEffect, useContext } from "react";
-import { GameContext } from "contexts/GameContext";
+import { useState, useEffect } from "react";
 
-const useFlagGrid = () => {
-  const { gridWidth, gridHeight, startTime } = useContext(GameContext);
+interface GridParams {
+  gridWidth: number;
+  gridHeight: number;
+  startTime: number;
+}
+
+const useFlagGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
   const [flagGrid, setFlagGrid] = useState<boolean[][]>(
     new Array(gridHeight).fill(new Array(gridWidth).fill(false))
   );
