@@ -49,9 +49,16 @@ const Container = styled.div<{ width: number; height: number }>`
 `;
 
 const Grid: React.FC = () => {
-  const { gridWidth, gridHeight, valueGrid } = useContext(GameContext);
+  const { gridWidth, gridHeight, valueGrid, setIsMouseDown } = useContext(
+    GameContext
+  );
   return (
-    <Container width={gridWidth * 30} height={gridHeight * 30}>
+    <Container
+      width={gridWidth * 30}
+      height={gridHeight * 30}
+      onMouseDown={() => setIsMouseDown(true)}
+      onMouseUp={() => setIsMouseDown(false)}
+    >
       {valueGrid.map((row, i) => (
         <Row y={i} valueRow={row} key={i} />
       ))}

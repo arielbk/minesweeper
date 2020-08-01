@@ -22,19 +22,19 @@ const GamefaceTile = styled.button`
 `;
 
 const Gameface: React.FC = () => {
-  const { isRunning, startTime, handleRestart } = useContext(GameContext);
+  const { isRunning, startTime, handleRestart, isMouseDown } = useContext(
+    GameContext
+  );
+
+  let face = "🙂";
+  if (startTime && !isRunning) face = "😵";
+  if ((isRunning || !startTime) && isMouseDown) face = "😯";
 
   return (
     <GamefaceTile onClick={handleRestart}>
-      {isRunning || !startTime ? (
-        <span role="img" aria-label="start game">
-          🙂
-        </span>
-      ) : (
-        <span role="img" aria-label="new game">
-          😵
-        </span>
-      )}
+      <span role="img" aria-label="game face, restart game">
+        {face}
+      </span>
     </GamefaceTile>
   );
 };

@@ -17,6 +17,7 @@ export const GameContext = createContext({
   valueGrid: [["M"]],
   isRevealedGrid: [[false]],
   flagGrid: [[false]],
+  isMouseDown: false,
 
   /**
    * Functions
@@ -24,11 +25,13 @@ export const GameContext = createContext({
   handleRestart: () => {},
   handleSelectCell: (cell: [number, number]) => {},
   handleFlagCell: (cell: [number, number]) => {},
+  setIsMouseDown: (isDown: boolean) => {},
 });
 
 export const GameProvider: React.FC = ({ children }) => {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>(0);
+  const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
   const gridWidth = 15;
   const gridHeight = 15;
 
@@ -57,11 +60,11 @@ export const GameProvider: React.FC = ({ children }) => {
     handleRevealCells(toReveal);
   };
 
-  console.log("start time from context", startTime);
   return (
     <GameContext.Provider
       value={{
         isRunning,
+        isMouseDown,
         startTime,
         currentScore: 0,
         gridWidth,
@@ -72,6 +75,7 @@ export const GameProvider: React.FC = ({ children }) => {
         handleRestart,
         handleSelectCell,
         handleFlagCell,
+        setIsMouseDown,
       }}
     >
       <>{children}</>
