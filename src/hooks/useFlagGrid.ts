@@ -15,11 +15,11 @@ const useFlagGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
     setFlagGrid(new Array(gridHeight).fill(new Array(gridWidth).fill(false)));
   }, [gridHeight, gridWidth, startTime]);
 
-  // sets cells to revealed
+  // toggles flag cell
   const handleFlagCell = (cell: [number, number]): void => {
     const [x, y] = cell;
     const flagGridCopy = flagGrid.map((row) => row.map((col) => col));
-    flagGridCopy[y][x] = true;
+    flagGridCopy[y][x] = !flagGridCopy[y][x];
     setFlagGrid(flagGridCopy);
   };
 

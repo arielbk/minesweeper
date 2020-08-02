@@ -10,6 +10,8 @@ interface GridParams {
 const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
   // 2d array, number of adjacent mines
   const [valueGrid, setValueGrid] = useState<string[][]>([[]]);
+  // locations of all mines
+  const [mineLocations, setMineLocations] = useState<[number, number][]>([]);
 
   // initializes grid values
   const initializeGrid = () => {
@@ -32,6 +34,8 @@ const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
         minesToSet.push(mineLocation);
     }
 
+    setMineLocations(minesToSet);
+
     // populate value grid
     const valuesToSet: string[][] = [];
     for (let x = 0; x < gridWidth; x++) {
@@ -50,9 +54,7 @@ const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
 
   useEffect(initializeGrid, [startTime]);
 
-  return {
-    valueGrid,
-  };
+  return { valueGrid, mineLocations };
 };
 
 export default useValueGrid;

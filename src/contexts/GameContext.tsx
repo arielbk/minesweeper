@@ -9,6 +9,7 @@ export const GameContext = createContext({
    * State
    */
   isDead: false,
+  isWinner: false,
   startTime: 0,
   currentScore: 0,
   // todo: these could go in a settings context?
@@ -30,6 +31,7 @@ export const GameContext = createContext({
 
 export const GameProvider: React.FC = ({ children }) => {
   const [isDead, setIsDead] = useState<boolean>(false);
+  const [isWinner, setIsWinner] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
   const gridWidth = 15;
@@ -37,17 +39,37 @@ export const GameProvider: React.FC = ({ children }) => {
 
   //grid values
   const gridParams = { gridWidth, gridHeight, startTime };
-  const { valueGrid } = useValueGrid(gridParams);
+  const { valueGrid, mineLocations } = useValueGrid(gridParams);
   const { isRevealedGrid, handleRevealCells } = useIsRevealedGrid(gridParams);
   const { flagGrid, handleFlagCell } = useFlagGrid(gridParams);
 
-  // is running becomes true, a new start time is set
   useEffect(() => {
     if (!isDead) setStartTime(Date.now());
   }, [isDead]);
 
+  // check if we have a winner
+  useEffect(() => {
+    if (!mineLocations.length) return;
+    // check if each is flagged
+    const allFlagged = mineLocations.every((loc) => {
+      const [x, y] = loc;
+      return flagGrid[y][x];
+    });
+    // check if number of flags === number of mines
+    let flagCount = 0;
+    flagGrid.forEach((row) =>
+      row.forEach((cell) => {
+        if (cell) flagCount += 1;
+      })
+    );
+    // set winner state
+    if (allFlagged && flagCount === mineLocations.length) setIsWinner(true);
+    // todo: reveal all cells but mine bg should not be red
+  }, [flagGrid, mineLocations]);
+
   const handleRestart = () => {
     setIsDead(false);
+    setIsWinner(false);
     setStartTime(Date.now());
   };
 
@@ -63,10 +85,13 @@ export const GameProvider: React.FC = ({ children }) => {
     handleRevealCells(toReveal);
   };
 
+  console.log(isWinner);
+
   return (
     <GameContext.Provider
       value={{
         isDead,
+        isWinner,
         isMouseDown,
         startTime,
         currentScore: 0,
