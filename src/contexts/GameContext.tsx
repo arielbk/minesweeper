@@ -3,6 +3,7 @@ import useValueGrid from "hooks/useValueGrid";
 import useIsRevealedGrid from "hooks/useIsRevealedGrid";
 import { findContiguousArea } from "utilities/mineCoordinates";
 import useFlagGrid from "hooks/useFlagGrid";
+import { isCompositeComponent } from "react-dom/test-utils";
 
 export const GameContext = createContext({
   /**
@@ -18,6 +19,7 @@ export const GameContext = createContext({
   valueGrid: [["M"]],
   isRevealedGrid: [[false]],
   flagGrid: [[false]],
+  flagCount: 0,
   isMouseDown: false,
 
   /**
@@ -34,14 +36,17 @@ export const GameProvider: React.FC = ({ children }) => {
   const [isWinner, setIsWinner] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-  const gridWidth = 15;
-  const gridHeight = 15;
+  const gridWidth = 5;
+  const gridHeight = 5;
 
   //grid values
   const gridParams = { gridWidth, gridHeight, startTime };
   const { valueGrid, mineLocations } = useValueGrid(gridParams);
   const { isRevealedGrid, handleRevealCells } = useIsRevealedGrid(gridParams);
-  const { flagGrid, handleFlagCell } = useFlagGrid(gridParams);
+  const { flagGrid, handleFlagCell, flagCount } = useFlagGrid({
+    ...gridParams,
+    mineCount: mineLocations.length,
+  });
 
   useEffect(() => {
     if (!isDead) setStartTime(Date.now());
@@ -55,17 +60,12 @@ export const GameProvider: React.FC = ({ children }) => {
       const [x, y] = loc;
       return flagGrid[y][x];
     });
-    // check if number of flags === number of mines
-    let flagCount = 0;
-    flagGrid.forEach((row) =>
-      row.forEach((cell) => {
-        if (cell) flagCount += 1;
-      })
-    );
+    console.log(mineLocations);
+    console.log(flagGrid);
     // set winner state
-    if (allFlagged && flagCount === mineLocations.length) setIsWinner(true);
+    if (allFlagged) setIsWinner(true);
     // todo: reveal all cells but mine bg should not be red
-  }, [flagGrid, mineLocations]);
+  }, [flagCount, flagGrid, mineLocations]);
 
   const handleRestart = () => {
     setIsDead(false);
@@ -78,14 +78,13 @@ export const GameProvider: React.FC = ({ children }) => {
     const [x, y] = cell;
     // set initial start time
     if (!startTime) setStartTime(Date.now());
-    if (isDead || isRevealedGrid[y][x] === true) return;
+    // ignore if dead, already revealed, or flagged
+    if (isDead || isRevealedGrid[y][x] === true || flagGrid[y][x]) return;
     if (valueGrid[y][x] === "M") setIsDead(true);
     if (valueGrid[y][x] !== "0") return handleRevealCells([[x, y]]);
     const toReveal = findContiguousArea([x, y], valueGrid);
     handleRevealCells(toReveal);
   };
-
-  console.log(isWinner);
 
   return (
     <GameContext.Provider
@@ -100,6 +99,7 @@ export const GameProvider: React.FC = ({ children }) => {
         valueGrid,
         isRevealedGrid,
         flagGrid,
+        flagCount,
         handleRestart,
         handleSelectCell,
         handleFlagCell,

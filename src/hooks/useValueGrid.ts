@@ -38,16 +38,16 @@ const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
 
     // populate value grid
     const valuesToSet: string[][] = [];
-    for (let x = 0; x < gridWidth; x++) {
+    for (let y = 0; y < gridWidth; y++) {
       const row: string[] = [];
-      for (let y = 0; y < gridHeight; y++) {
+      for (let x = 0; x < gridHeight; x++) {
         const adjacentMines = calculateAdjacentMines([x, y], minesToSet);
         row.push(adjacentMines);
       }
       valuesToSet.push(row);
     }
     // lay mines
-    minesToSet.forEach((mine) => (valuesToSet[mine[0]][mine[1]] = "M"));
+    minesToSet.forEach((mine) => (valuesToSet[mine[1]][mine[0]] = "M"));
 
     setValueGrid(valuesToSet);
   };

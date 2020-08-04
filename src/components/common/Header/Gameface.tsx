@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { GameContext } from "../../../../contexts/GameContext";
+import { GameContext } from "../../../contexts/GameContext";
 
 const GamefaceTile = styled.button`
   vertical-align: top;

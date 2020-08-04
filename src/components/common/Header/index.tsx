@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { GameContext } from "contexts/GameContext";
 import Gameface from "./Gameface";
 
 const Container = styled.div`
@@ -12,9 +13,10 @@ const Container = styled.div`
 `;
 
 const Header: React.FC = () => {
+  const { flagCount } = useContext(GameContext);
   return (
     <Container>
-      <div>score</div>
+      <div>{flagCount}</div>
       <Gameface />
       <div>timee</div>
     </Container>
