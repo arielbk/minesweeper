@@ -3,7 +3,6 @@ import useValueGrid from "hooks/useValueGrid";
 import useIsRevealedGrid from "hooks/useIsRevealedGrid";
 import { findContiguousArea } from "utilities/mineCoordinates";
 import useFlagGrid from "hooks/useFlagGrid";
-import { isCompositeComponent } from "react-dom/test-utils";
 
 export const GameContext = createContext({
   /**
@@ -36,8 +35,8 @@ export const GameProvider: React.FC = ({ children }) => {
   const [isWinner, setIsWinner] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-  const gridWidth = 5;
-  const gridHeight = 5;
+  const gridWidth = 10;
+  const gridHeight = 10;
 
   //grid values
   const gridParams = { gridWidth, gridHeight, startTime };
@@ -60,8 +59,6 @@ export const GameProvider: React.FC = ({ children }) => {
       const [x, y] = loc;
       return flagGrid[y][x];
     });
-    console.log(mineLocations);
-    console.log(flagGrid);
     // set winner state
     if (allFlagged) setIsWinner(true);
     // todo: reveal all cells but mine bg should not be red
