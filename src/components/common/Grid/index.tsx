@@ -26,6 +26,7 @@ const Row: React.FC<RowProps> = ({ y, valueRow }) => {
     <StyledRow>
       {valueRow.map((cell, x) => (
         <Cell
+          key={x}
           value={cell}
           isRevealed={isRevealedGrid[y][x]}
           isFlagged={flagGrid[y][x]}

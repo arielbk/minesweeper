@@ -1,4 +1,4 @@
-export const calculateAdjacentMines = (
+export const calculateAdjacentMineCount = (
   loc: number[],
   mines: [number, number][]
 ): string => {
@@ -30,24 +30,57 @@ export const isCoordinateAdjacent = (
   );
 };
 
+// returns adjacent coordinates that are still within the grid
+const getAdjacentCellCoordinates = (
+  [x, y]: [number, number],
+  width: number,
+  height: number
+): [number, number][] => {
+  // begin with all adjacent coordinates
+  const coordinates: [number, number][] = [
+    [x - 1, y - 1],
+    [x, y - 1],
+    [x + 1, y - 1],
+    [x - 1, y],
+    [x + 1, y],
+    [x - 1, y + 1],
+    [x, y + 1],
+    [x + 1, y + 1],
+  ];
+  return coordinates.filter(
+    (coordinate) =>
+      coordinate[0] >= 0 &&
+      coordinate[0] < width &&
+      coordinate[1] >= 0 &&
+      coordinate[1] < height
+  );
+};
+
 // find an area of safe cells (including border cells)
 export const findContiguousArea = (
   [x, y]: [number, number],
   valueGrid: string[][]
 ): [number, number][] => {
   const areaCells: [number, number][] = [];
-  let scanX = x;
+  let scanX: number = x;
 
   // add touching coordinates of the current line
-  let isLeftChecked = false;
+  let isLeftChecked: boolean = false;
   while (true) {
     // check the left side
-    if (valueGrid[y][scanX] === "0") areaCells.push([scanX, y]);
-    else if (isLeftChecked) break;
+    if (valueGrid[y][scanX] === "0" && !areaCells.includes([scanX, y]))
+      areaCells.push([scanX, y]);
+    // if not an empty cell
     else {
-      scanX = x;
-      isLeftChecked = true;
+      // finish current line scan
+      if (isLeftChecked) break;
+      // move to right side
+      else {
+        scanX = x;
+        isLeftChecked = true;
+      }
     }
+    // move left or right (depending on flag)
     if (isLeftChecked) scanX += 1;
     else scanX -= 1;
   }
@@ -55,31 +88,40 @@ export const findContiguousArea = (
   // scan upper and lower lines for touching coordinates
   let prevAreaRow: [number, number][] = areaCells;
   // start one line above toCheck
-  let scanY = y - 1;
+  let scanY: number = y - 1;
   // if checking upper is done
-  let isUpperDone = false;
+  let isUpperDone: boolean = false;
 
   // iterate through upper then lower rows until none are touching
   while (prevAreaRow.length || !isUpperDone) {
     // current row area to push to
     let rowArea: [number, number][] = [];
 
-    // any free cells on current row
-    let rowFree: [number, number][] = [];
+    // collate connected empty cells
     if (valueGrid[scanY])
       valueGrid[scanY].forEach((val, i) => {
-        if (val === "0") rowFree.push([i, scanY]);
+        if (val !== "0") return;
+        const freeCell: [number, number] = [i, scanY];
+        const isArea = prevAreaRow.some((areaCell) =>
+          isCoordinateAdjacent(areaCell, freeCell)
+        );
+        if (isArea) rowArea.push(freeCell);
       });
 
-    rowFree.forEach((freeCell) => {
-      const isArea = prevAreaRow.some((areaCell) =>
-        isCoordinateAdjacent(areaCell, freeCell)
-      );
-      if (isArea) rowArea.push(freeCell);
-    });
-
     // push the current previous row into the area and create a new prev
-    prevAreaRow.forEach((cell) => areaCells.push(cell));
+    prevAreaRow
+      .filter((cell) => !areaCells.includes(cell))
+      .forEach((cell) => {
+        areaCells.push(cell);
+        // add any adjacent cells
+        getAdjacentCellCoordinates(
+          [cell[0], cell[1]],
+          valueGrid[0].length,
+          valueGrid.length
+        )
+          .filter((coordinate) => !areaCells.includes(coordinate))
+          .forEach((coordinate) => areaCells.push(coordinate));
+      });
 
     if (!rowArea.length && !isUpperDone) {
       isUpperDone = true;

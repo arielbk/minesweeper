@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { calculateAdjacentMines } from "utilities/mineCoordinates";
+import { calculateAdjacentMineCount } from "utilities/mineCoordinates";
 
 interface GridParams {
   gridWidth: number;
@@ -41,7 +41,7 @@ const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
     for (let y = 0; y < gridWidth; y++) {
       const row: string[] = [];
       for (let x = 0; x < gridHeight; x++) {
-        const adjacentMines = calculateAdjacentMines([x, y], minesToSet);
+        const adjacentMines = calculateAdjacentMineCount([x, y], minesToSet);
         row.push(adjacentMines);
       }
       valuesToSet.push(row);
