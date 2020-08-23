@@ -1,0 +1,40 @@
+name: Node Github CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  # test:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: install deps
+  #       run: |
+  #         yarn install
+  #     - name: run cypress
+  #       uses: cypress-io/github-action@v2
+  #       with:
+  #         start: yarn dev
+  #         wait-on: http://localhost:3000
+  #         command: yarn lerna run e2e
+
+  deploy:
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and deploy node app
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /var/www/minesweeper
+            sudo git reset --hard
+            sudo git pull origin master
+            sudo yarn install --production
+            sudo yarn build
