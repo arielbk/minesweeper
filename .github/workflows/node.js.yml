@@ -22,11 +22,11 @@ jobs:
   #         command: yarn lerna run e2e
 
   deploy:
-    needs: [test]
+    # needs: [test]
     runs-on: ubuntu-latest
 
     steps:
-      - name: SSH and deploy node app
+      - name: SSH and build react app
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
