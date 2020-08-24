@@ -55,6 +55,7 @@ const Grid: React.FC = () => {
   );
   return (
     <Container
+      data-cy="grid"
       width={gridWidth * 30}
       height={gridHeight * 30}
       onMouseDown={() => setIsMouseDown(true)}

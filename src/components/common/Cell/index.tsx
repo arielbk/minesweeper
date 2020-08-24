@@ -57,6 +57,7 @@ const Cell: React.FC<Props> = ({
   ) : (
     <CellButton onContextMenu={onFlagCell} onClick={onSelectCell}>
       {isFlagged ? <MdFlag /> : ""}
+      {process.env.REACT_APP_DEBUG_MODE ? label : ""}
     </CellButton>
   );
 };

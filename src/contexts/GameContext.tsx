@@ -35,8 +35,8 @@ export const GameProvider: React.FC = ({ children }) => {
   const [isWinner, setIsWinner] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-  const gridWidth = 7,
-    gridHeight = 7;
+  const gridWidth = 3,
+    gridHeight = 3;
 
   //grid values
   const gridParams = { gridWidth, gridHeight, startTime };
