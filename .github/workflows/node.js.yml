@@ -19,10 +19,9 @@ jobs:
         with:
           start: yarn dev
           wait-on: http://localhost:3000
-          command: yarn cy:run
 
   deploy:
-    # needs: [test]
+    needs: [test]
     runs-on: ubuntu-latest
 
     steps:
