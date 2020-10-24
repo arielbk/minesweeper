@@ -52,7 +52,7 @@ const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
     setValueGrid(valuesToSet);
   };
 
-  useEffect(initializeGrid, [startTime]);
+  useEffect(initializeGrid, [startTime, gridWidth, gridHeight]);
 
   return { valueGrid, mineLocations };
 };

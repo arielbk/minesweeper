@@ -28,6 +28,7 @@ export const GameContext = createContext({
   handleSelectCell: (cell: [number, number]) => {},
   handleFlagCell: (cell: [number, number]) => {},
   setIsMouseDown: (isDown: boolean) => {},
+  setGridDimensions: (dimensions: number) => {},
 });
 
 export const GameProvider: React.FC = ({ children }) => {
@@ -35,8 +36,10 @@ export const GameProvider: React.FC = ({ children }) => {
   const [isWinner, setIsWinner] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-  const gridWidth = 3,
-    gridHeight = 3;
+  const [gridDimensions, setGridDimensions] = useState<number>(15);
+  // todo: we are assuming that the grid is always square (for now)
+  const gridWidth = gridDimensions;
+  const gridHeight = gridDimensions;
 
   //grid values
   const gridParams = { gridWidth, gridHeight, startTime };
@@ -47,10 +50,11 @@ export const GameProvider: React.FC = ({ children }) => {
     mineCount: mineLocations.length,
   });
 
+  
   useEffect(() => {
     if (!isDead) setStartTime(Date.now());
   }, [isDead]);
-
+  
   // check if we have a winner
   useEffect(() => {
     if (!mineLocations.length) return;
@@ -63,13 +67,13 @@ export const GameProvider: React.FC = ({ children }) => {
     if (allFlagged) setIsWinner(true);
     // todo: reveal all cells but mine bg should not be red
   }, [flagCount, flagGrid, mineLocations]);
-
+  
   const handleRestart = () => {
     setIsDead(false);
     setIsWinner(false);
     setStartTime(Date.now());
   };
-
+  
   // determines what to do with selected cell
   const handleSelectCell = (cell: [number, number]) => {
     const [x, y] = cell;
@@ -93,6 +97,7 @@ export const GameProvider: React.FC = ({ children }) => {
         currentScore: 0,
         gridWidth,
         gridHeight,
+        setGridDimensions,
         valueGrid,
         isRevealedGrid,
         flagGrid,
