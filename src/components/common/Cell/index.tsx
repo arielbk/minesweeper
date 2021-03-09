@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import { MdFlag } from "react-icons/md";
-import { FaBomb } from "react-icons/fa";
+import React from 'react';
+import styled from 'styled-components';
+import { MdFlag } from 'react-icons/md';
+import { FaBomb } from 'react-icons/fa';
 
 const CellButton = styled.button`
   vertical-align: top;
@@ -30,8 +30,8 @@ const CellLabel = styled.div<{ isMine: boolean }>`
   width: 30px;
   height: 30px;
   border: 1px solid #555;
-  background: ${({ isMine }) => (isMine ? "red" : "#777")};
-  color: ${({ isMine }) => (isMine ? "#000" : "#fff")};
+  background: ${({ isMine }) => (isMine ? 'red' : '#777')};
+  color: ${({ isMine }) => (isMine ? '#000' : '#fff')};
 `;
 
 interface Props {
@@ -50,14 +50,14 @@ const Cell: React.FC<Props> = ({
   onFlagCell,
 }) => {
   let label: any = value;
-  if (value === "M") label = <FaBomb />;
-  if (value === "0") label = "";
+  if (value === 'M') label = <FaBomb />;
+  if (value === '0') label = '';
   return isRevealed ? (
-    <CellLabel isMine={value === "M"}>{label}</CellLabel>
+    <CellLabel isMine={value === 'M'}>{label}</CellLabel>
   ) : (
     <CellButton onContextMenu={onFlagCell} onClick={onSelectCell}>
-      {isFlagged ? <MdFlag /> : ""}
-      {process.env.REACT_APP_DEBUG_MODE ? label : ""}
+      {isFlagged ? <MdFlag /> : ''}
+      {process.env.REACT_APP_DEBUG_MODE ? label : ''}
     </CellButton>
   );
 };

@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
-import Cell from "../Cell";
-import styled from "styled-components";
-import { GameContext } from "contexts/GameContext";
+import React, { useContext } from 'react';
+import Cell from '../Cell';
+import styled from 'styled-components';
+import { GameContext } from 'contexts/GameContext';
 
 const StyledRow = styled.div`
   display: block;
@@ -51,7 +51,7 @@ const Container = styled.div<{ width: number; height: number }>`
 
 const Grid: React.FC = () => {
   const { gridWidth, gridHeight, valueGrid, setIsMouseDown } = useContext(
-    GameContext
+    GameContext,
   );
   return (
     <Container

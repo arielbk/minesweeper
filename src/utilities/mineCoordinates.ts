@@ -1,6 +1,6 @@
 export const calculateAdjacentMineCount = (
   loc: number[],
-  mines: [number, number][]
+  mines: [number, number][],
 ): string => {
   let count = 0;
   mines.forEach((mine) => {
@@ -18,7 +18,7 @@ export const calculateAdjacentMineCount = (
 
 export const isCoordinateAdjacent = (
   center: [number, number],
-  toCheck: [number, number]
+  toCheck: [number, number],
 ): boolean => {
   return (
     (toCheck[0] === center[0] ||
@@ -34,7 +34,7 @@ export const isCoordinateAdjacent = (
 const getAdjacentCellCoordinates = (
   [x, y]: [number, number],
   width: number,
-  height: number
+  height: number,
 ): [number, number][] => {
   // begin with all adjacent coordinates
   const coordinates: [number, number][] = [
@@ -52,23 +52,23 @@ const getAdjacentCellCoordinates = (
       coordinate[0] >= 0 &&
       coordinate[0] < width &&
       coordinate[1] >= 0 &&
-      coordinate[1] < height
+      coordinate[1] < height,
   );
 };
 
 // find an area of safe cells (including border cells)
 export const findContiguousArea = (
   [x, y]: [number, number],
-  valueGrid: string[][]
+  valueGrid: string[][],
 ): [number, number][] => {
   const areaCells: [number, number][] = [];
   let scanX: number = x;
 
   // add touching coordinates of the current line
-  let isLeftChecked: boolean = false;
+  let isLeftChecked = false;
   while (true) {
     // check the left side
-    if (valueGrid[y][scanX] === "0" && !areaCells.includes([scanX, y]))
+    if (valueGrid[y][scanX] === '0' && !areaCells.includes([scanX, y]))
       areaCells.push([scanX, y]);
     // if not an empty cell
     else {
@@ -90,20 +90,20 @@ export const findContiguousArea = (
   // start one line above toCheck
   let scanY: number = y - 1;
   // if checking upper is done
-  let isUpperDone: boolean = false;
+  let isUpperDone = false;
 
   // iterate through upper then lower rows until none are touching
   while (prevAreaRow.length || !isUpperDone) {
     // current row area to push to
-    let rowArea: [number, number][] = [];
+    const rowArea: [number, number][] = [];
 
     // collate connected empty cells
     if (valueGrid[scanY])
       valueGrid[scanY].forEach((val, i) => {
-        if (val !== "0") return;
+        if (val !== '0') return;
         const freeCell: [number, number] = [i, scanY];
         const isArea = prevAreaRow.some((areaCell) =>
-          isCoordinateAdjacent(areaCell, freeCell)
+          isCoordinateAdjacent(areaCell, freeCell),
         );
         if (isArea) rowArea.push(freeCell);
       });
@@ -117,7 +117,7 @@ export const findContiguousArea = (
         getAdjacentCellCoordinates(
           [cell[0], cell[1]],
           valueGrid[0].length,
-          valueGrid.length
+          valueGrid.length,
         )
           .filter((coordinate) => !areaCells.includes(coordinate))
           .forEach((coordinate) => areaCells.push(coordinate));

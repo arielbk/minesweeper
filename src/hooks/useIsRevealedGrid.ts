@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 interface GridParams {
   gridWidth: number;
@@ -12,12 +12,12 @@ const useIsRevealedGrid = ({
   startTime,
 }: GridParams) => {
   const [isRevealedGrid, setIsRevealedGrid] = useState<boolean[][]>(
-    new Array(gridHeight).fill(new Array(gridWidth).fill(false))
+    new Array(gridHeight).fill(new Array(gridWidth).fill(false)),
   );
 
   useEffect(() => {
     setIsRevealedGrid(
-      new Array(gridHeight).fill(new Array(gridWidth).fill(false))
+      new Array(gridHeight).fill(new Array(gridWidth).fill(false)),
     );
   }, [gridHeight, gridWidth, startTime]);
 

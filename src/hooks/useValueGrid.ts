@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { calculateAdjacentMineCount } from "utilities/mineCoordinates";
+import { useState, useEffect } from 'react';
+import { calculateAdjacentMineCount } from 'utilities/mineCoordinates';
 
 interface GridParams {
   gridWidth: number;
@@ -28,7 +28,8 @@ const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
       if (
         !minesToSet.some(
           (mineToSet) =>
-            mineToSet[0] === mineLocation[0] && mineToSet[1] === mineLocation[1]
+            mineToSet[0] === mineLocation[0] &&
+            mineToSet[1] === mineLocation[1],
         )
       )
         minesToSet.push(mineLocation);
@@ -47,7 +48,7 @@ const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
       valuesToSet.push(row);
     }
     // lay mines
-    minesToSet.forEach((mine) => (valuesToSet[mine[1]][mine[0]] = "M"));
+    minesToSet.forEach((mine) => (valuesToSet[mine[1]][mine[0]] = 'M'));
 
     setValueGrid(valuesToSet);
   };

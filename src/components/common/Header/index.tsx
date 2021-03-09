@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
-import styled from "styled-components";
-import { GameContext } from "contexts/GameContext";
-import Gameface from "./Gameface";
+import React, { useEffect, useState, useContext, useRef } from 'react';
+import styled from 'styled-components';
+import { GameContext } from 'contexts/GameContext';
+import Gameface from './Gameface';
 
 const Container = styled.div`
   margin: 2rem auto;
@@ -19,7 +19,7 @@ const NumberField = styled.div`
   width: 120px;
   padding: 5px 10px;
   font-size: 30px;
-  font-family: "Courier New", Courier, monospace;
+  font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
 `;
 
@@ -30,10 +30,10 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     if (isWinner || isDead) return clearInterval(intervalId.current);
-    intervalId.current = setInterval(() => {
+    intervalId.current = (setInterval(() => {
       const newTime = Math.floor((Date.now() - startTime) / 1000);
       setTimeElapsed(newTime);
-    }, 1000);
+    }, 1000) as unknown) as number;
     return () => clearInterval(intervalId.current);
   }, [startTime, isWinner, isDead]);
 

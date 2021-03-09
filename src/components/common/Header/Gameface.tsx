@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import styled from "styled-components";
-import { GameContext } from "../../../contexts/GameContext";
+import React, { useContext } from 'react';
+import styled from 'styled-components';
+import { GameContext } from '../../../contexts/GameContext';
 
 const GamefaceTile = styled.button`
   vertical-align: top;
@@ -23,12 +23,12 @@ const GamefaceTile = styled.button`
 
 const Gameface: React.FC = () => {
   const { isDead, isWinner, handleRestart, isMouseDown } = useContext(
-    GameContext
+    GameContext,
   );
-  let face = "🙂";
-  if (isMouseDown) face = "😮";
-  if (isDead) face = "😵";
-  if (isWinner) face = "😎";
+  let face = '🙂';
+  if (isMouseDown) face = '😮';
+  if (isDead) face = '😵';
+  if (isWinner) face = '😎';
   return (
     <GamefaceTile onClick={handleRestart}>
       <span role="img" aria-label="game face, restart game">
