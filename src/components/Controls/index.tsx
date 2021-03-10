@@ -11,9 +11,7 @@ const Container = styled.div`
 
 const NumberField = styled.div`
   color: #ed0100;
-  text-align: right;
   width: 120px;
-  padding: 5px 10px;
   font-size: 30px;
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
@@ -37,7 +35,7 @@ const Controls: React.FC = () => {
     <Container>
       <NumberField>{flagCount}</NumberField>
       <Gameface />
-      <NumberField>{timeElapsed}</NumberField>
+      <NumberField style={{ textAlign: 'right'}}>{timeElapsed}</NumberField>
     </Container>
   );
 };

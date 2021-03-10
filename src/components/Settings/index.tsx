@@ -1,11 +1,6 @@
 import React, { useContext } from 'react';
-import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
-
-const Container = styled.div`
-  display: block;
-  text-align: center;
-`;
+import { Box } from '@chakra-ui/layout';
 
 const Settings: React.FC = () => {
   const {
@@ -23,7 +18,7 @@ const Settings: React.FC = () => {
 
   if (!startTime && !isDead && !isWinner) return <div />;
   return (
-    <Container>
+    <Box pb="2rem" position="absolute" left="50%" transform="translateX(-50%)">
       <label htmlFor="grid-dimensions">Grid dimensions: </label>
       <select
         name="grid-dimensions"
@@ -37,7 +32,7 @@ const Settings: React.FC = () => {
         <option value={20}>20</option>
         <option value={25}>25</option>
       </select>
-    </Container>
+    </Box>
   );
 };
 

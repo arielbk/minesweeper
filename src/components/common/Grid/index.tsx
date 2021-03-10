@@ -1,13 +1,17 @@
-import React, { useContext } from 'react';
-import Cell from '../Cell';
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
+import React, { useContext } from 'react';
+import Cell from '../Cell';
 
 const Container = styled.div<{ width: number; height: number }>`
-  margin: 2rem auto;
+  margin: 1rem auto;
   box-sizing: content-box;
-  width: ${({ width }) => width}px;
-  height: ${({ height }) => height}px;
+  width: 500px;
+  height: 500px;
+  display: grid;
+  grid-template-rows: ${({height}) => `repeat(${height}, 1fr)`};
+  grid-template-columns: ${({width}) => `repeat(${width}, 1fr)`};
+  grid-gap: 1%;
 `;
 
 const Grid: React.FC = () => {
@@ -24,24 +28,24 @@ const Grid: React.FC = () => {
   return (
     <Container
       data-cy="grid"
-      width={gridWidth * 30}
-      height={gridHeight * 30}
+      width={gridWidth}
+      height={gridHeight}
       onMouseDown={() => setIsMouseDown(true)}
       onMouseUp={() => setIsMouseDown(false)}
     >
       {valueGrid.map((row, y) => {
         return row.map((cell, x) => (
-          <Cell
-            key={x}
-            value={cell}
-            isRevealed={isRevealedGrid[y][x]}
-            isFlagged={flagGrid[y][x]}
-            onFlagCell={(e) => {
-              e.preventDefault();
-              handleFlagCell([x, y]);
-            }}
-            onSelectCell={() => handleSelectCell([x, y])}
-          />
+            <Cell
+              key={x}
+              value={cell}
+              isRevealed={isRevealedGrid[y][x]}
+              isFlagged={flagGrid[y][x]}
+              onFlagCell={(e) => {
+                e.preventDefault();
+                handleFlagCell([x, y]);
+              }}
+              onSelectCell={() => handleSelectCell([x, y])}
+            />
         ));
       })}
     </Container>

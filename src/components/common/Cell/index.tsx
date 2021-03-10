@@ -1,14 +1,14 @@
-import React from 'react';
 import styled from '@emotion/styled';
-import { MdFlag } from 'react-icons/md';
+import React from 'react';
 import { FaBomb } from 'react-icons/fa';
+import { MdFlag } from 'react-icons/md';
 
 const CellButton = styled.button`
-  vertical-align: top;
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  border: 1px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
   background: #eee;
   outline: 0;
   color: red;
@@ -22,13 +22,11 @@ const CellButton = styled.button`
 `;
 
 const CellLabel = styled.div<{ isMine: boolean }>`
-  vertical-align: top;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid #fff;
+  width: 100%;
+  height: 100%;
   background: ${({ isMine }) => (isMine ? 'red' : '#777')};
   color: ${({ isMine }) => (isMine ? '#000' : '#fff')};
 `;
