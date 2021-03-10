@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { MdFlag } from 'react-icons/md';
 import { FaBomb } from 'react-icons/fa';
 
@@ -8,9 +8,8 @@ const CellButton = styled.button`
   display: inline-block;
   width: 30px;
   height: 30px;
-  border: 1px solid #777;
+  border: 1px solid #fff;
   background: #eee;
-  background: linear-gradient(45deg, #eee, #ccc);
   outline: 0;
   color: red;
   font-size: 18px;
@@ -29,7 +28,7 @@ const CellLabel = styled.div<{ isMine: boolean }>`
   justify-content: center;
   width: 30px;
   height: 30px;
-  border: 1px solid #555;
+  border: 1px solid #fff;
   background: ${({ isMine }) => (isMine ? 'red' : '#777')};
   color: ${({ isMine }) => (isMine ? '#000' : '#fff')};
 `;

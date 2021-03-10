@@ -1,19 +1,15 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
 import Gameface from './Gameface';
 
 const Container = styled.div`
-  margin: 2rem auto;
-  width: 600px;
-  height: 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
 const NumberField = styled.div`
-  background: #333;
   color: #ed0100;
   text-align: right;
   width: 120px;
@@ -23,7 +19,7 @@ const NumberField = styled.div`
   font-weight: bold;
 `;
 
-const Header: React.FC = () => {
+const Controls: React.FC = () => {
   const { flagCount, startTime, isWinner, isDead } = useContext(GameContext);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const intervalId = useRef<number>();
@@ -46,4 +42,4 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+export default Controls;
