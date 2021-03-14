@@ -1,8 +1,19 @@
+/**
+ * TODO: use xstate -- use a state machine for the state of the game
+ * possible states:
+ * - lost
+ * - won
+ * - running
+ * - fresh
+ */
+
 import React, { createContext, useState, useEffect } from 'react';
 import useValueGrid from 'hooks/useValueGrid';
 import useIsRevealedGrid from 'hooks/useIsRevealedGrid';
 import { findContiguousArea } from 'utilities/mineCoordinates';
 import useFlagGrid from 'hooks/useFlagGrid';
+import { useMachine } from '@xstate/react';
+import gameMachine from './gameMachine';
 
 export const GameContext = createContext({
   isDead: false,
@@ -36,6 +47,7 @@ export const GameContext = createContext({
 });
 
 export const GameProvider: React.FC = ({ children }) => {
+  const [current, send] = useMachine(gameMachine);
   const [isDead, setIsDead] = useState<boolean>(false);
   const [isWinner, setIsWinner] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>(0);
