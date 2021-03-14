@@ -12,7 +12,6 @@ const CellButton = styled.button`
   background: #eee;
   outline: 0;
   color: red;
-  font-size: 18px;
 
   &:active {
     box-shadow: inset 4px 4px 8px #999;
@@ -32,6 +31,7 @@ const CellLabel = styled.div<{ isMine: boolean }>`
 `;
 
 interface Props {
+  fontSize: number;
   isRevealed: boolean;
   value: string;
   onSelectCell: () => void;
@@ -40,6 +40,7 @@ interface Props {
 }
 
 const Cell: React.FC<Props> = ({
+  fontSize,
   isRevealed,
   value,
   onSelectCell,
@@ -50,9 +51,9 @@ const Cell: React.FC<Props> = ({
   if (value === 'M') label = <FaBomb />;
   if (value === '0') label = '';
   return isRevealed ? (
-    <CellLabel isMine={value === 'M'}>{label}</CellLabel>
+    <CellLabel style={{ fontSize }} isMine={value === 'M'}>{label}</CellLabel>
   ) : (
-    <CellButton onContextMenu={onFlagCell} onClick={onSelectCell}>
+    <CellButton style={{ fontSize }} onContextMenu={onFlagCell} onClick={onSelectCell}>
       {isFlagged ? <MdFlag /> : ''}
       {process.env.REACT_APP_DEBUG_MODE ? label : ''}
     </CellButton>

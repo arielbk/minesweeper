@@ -11,7 +11,7 @@ const Container = styled.div<{ width: number; height: number }>`
   display: grid;
   grid-template-rows: ${({height}) => `repeat(${height}, 1fr)`};
   grid-template-columns: ${({width}) => `repeat(${width}, 1fr)`};
-  grid-gap: 1%;
+  grid-gap: ${({width}) => Math.floor(70 / width) + 'px'};
 `;
 
 const Grid: React.FC = () => {
@@ -35,17 +35,18 @@ const Grid: React.FC = () => {
     >
       {valueGrid.map((row, y) => {
         return row.map((cell, x) => (
-            <Cell
-              key={x}
-              value={cell}
-              isRevealed={isRevealedGrid[y][x]}
-              isFlagged={flagGrid[y][x]}
-              onFlagCell={(e) => {
-                e.preventDefault();
-                handleFlagCell([x, y]);
-              }}
-              onSelectCell={() => handleSelectCell([x, y])}
-            />
+          <Cell
+            fontSize={250 / gridWidth}
+            key={x}
+            value={cell}
+            isRevealed={isRevealedGrid[y][x]}
+            isFlagged={flagGrid[y][x]}
+            onFlagCell={(e) => {
+              e.preventDefault();
+              handleFlagCell([x, y]);
+            }}
+            onSelectCell={() => handleSelectCell([x, y])}
+          />
         ));
       })}
     </Container>

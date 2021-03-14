@@ -10,7 +10,6 @@ const Container = styled.div`
 `;
 
 const NumberField = styled.div`
-  color: #ed0100;
   width: 120px;
   font-size: 30px;
   font-family: 'Courier New', Courier, monospace;
