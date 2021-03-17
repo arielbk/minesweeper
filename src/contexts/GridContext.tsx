@@ -9,29 +9,49 @@ export const GridContext = createContext({
     /* */
   },
   valueGrid: [['M']],
+  mineLocations: [[0, 0]],
   isRevealedGrid: [[false]],
   flagGrid: [[false]],
+  flagCount: 15,
   handleRevealCells: (cell: [number, number][]) => {
-    /* */
+    //
   },
   handleFlagCell: (cell: [number, number]) => {
-    /* */
+    //
+  },
+  resetGrids: () => {
+    //
   },
 });
 
 export const GridProvider: React.FC = ({ children }) => {
   const [gridLength, setGridLength] = useState<number>(15);
-  const gridWidth = gridLength;
-  const gridHeight = gridLength;
 
   //grid values
-  const gridParams = { gridWidth, gridHeight, startTime };
-  const { valueGrid, mineLocations } = useValueGrid(gridParams);
-  const { isRevealedGrid, handleRevealCells } = useIsRevealedGrid(gridParams);
-  const { flagGrid, handleFlagCell, flagCount } = useFlagGrid({
+  const gridParams = { gridLength };
+  const { valueGrid, mineLocations, reset: resetValues } = useValueGrid(
+    gridParams,
+  );
+  const {
+    isRevealedGrid,
+    handleRevealCells,
+    reset: resetRevealed,
+  } = useIsRevealedGrid(gridParams);
+  const {
+    flagGrid,
+    handleFlagCell,
+    flagCount,
+    reset: resetFlags,
+  } = useFlagGrid({
     ...gridParams,
     mineCount: mineLocations.length,
   });
+
+  const resetGrids = () => {
+    resetValues();
+    resetRevealed();
+    resetFlags();
+  };
 
   return (
     <GridContext.Provider
@@ -39,10 +59,13 @@ export const GridProvider: React.FC = ({ children }) => {
         gridLength,
         setGridLength,
         valueGrid,
+        mineLocations,
         isRevealedGrid,
         flagGrid,
+        flagCount,
         handleRevealCells,
         handleFlagCell,
+        resetGrids,
       }}
     >
       {children}
