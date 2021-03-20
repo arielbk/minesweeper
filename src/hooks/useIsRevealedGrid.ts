@@ -15,10 +15,6 @@ const useIsRevealedGrid = ({ gridLength }: GridParams) => {
     );
   };
 
-  useEffect(() => {
-    initializeGrid();
-  }, [gridLength]);
-
   // sets cells to revealed
   const handleRevealCells = (cells: [number, number][]): void => {
     const isRevealedCopy = isRevealedGrid.map((row) => row.map((col) => col));

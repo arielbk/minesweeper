@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { calculateAdjacentMineCount } from 'utilities/mineCoordinates';
 
 interface GridParams {
@@ -50,8 +50,6 @@ const useValueGrid = ({ gridLength }: GridParams) => {
 
     setValueGrid(valuesToSet);
   };
-
-  useEffect(initializeGrid, [gridLength]);
 
   return { valueGrid, mineLocations, reset: initializeGrid };
 };

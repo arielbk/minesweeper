@@ -14,11 +14,6 @@ const useFlagGrid = ({ gridLength, mineCount }: GridParams) => {
     setFlagCount(mineCount);
   };
 
-  // initialize flag grid with no flags and set flags left
-  useEffect(() => {
-    initializeGrid();
-  }, [gridLength, mineCount]);
-
   // toggles flag cell
   const handleFlagCell = (cell: [number, number]): void => {
     const [x, y] = cell;

@@ -1,7 +1,7 @@
 import useFlagGrid from 'hooks/useFlagGrid';
 import useIsRevealedGrid from 'hooks/useIsRevealedGrid';
 import useValueGrid from 'hooks/useValueGrid';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 export const GridContext = createContext({
   gridLength: 15,
@@ -52,6 +52,11 @@ export const GridProvider: React.FC = ({ children }) => {
     resetRevealed();
     resetFlags();
   };
+
+  // reset grids on start or settings change
+  useEffect(() => {
+    resetGrids();
+  }, [gridLength]);
 
   return (
     <GridContext.Provider
