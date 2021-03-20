@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
+import { GridContext } from 'contexts/GridContext';
 import React, { useContext } from 'react';
 import Cell from '../Cell';
 
@@ -9,34 +10,32 @@ const Container = styled.div<{ width: number; height: number }>`
   width: 500px;
   height: 500px;
   display: grid;
-  grid-template-rows: ${({height}) => `repeat(${height}, 1fr)`};
-  grid-template-columns: ${({width}) => `repeat(${width}, 1fr)`};
-  grid-gap: ${({width}) => Math.floor(70 / width) + 'px'};
+  grid-template-rows: ${({ height }) => `repeat(${height}, 1fr)`};
+  grid-template-columns: ${({ width }) => `repeat(${width}, 1fr)`};
+  grid-gap: ${({ width }) => Math.floor(70 / width) + 'px'};
 `;
 
 const Grid: React.FC = () => {
+  const { setIsMouseDown, handleSelectCell } = useContext(GameContext);
   const {
-    gridWidth,
-    gridHeight,
+    gridLength,
     valueGrid,
-    setIsMouseDown,
     isRevealedGrid,
     flagGrid,
     handleFlagCell,
-    handleSelectCell,
-  } = useContext(GameContext);
+  } = useContext(GridContext);
   return (
     <Container
       data-cy="grid"
-      width={gridWidth}
-      height={gridHeight}
+      width={gridLength}
+      height={gridLength}
       onMouseDown={() => setIsMouseDown(true)}
       onMouseUp={() => setIsMouseDown(false)}
     >
       {valueGrid.map((row, y) => {
         return row.map((cell, x) => (
           <Cell
-            fontSize={250 / gridWidth}
+            fontSize={250 / gridLength}
             key={x}
             value={cell}
             isRevealed={isRevealedGrid[y][x]}
