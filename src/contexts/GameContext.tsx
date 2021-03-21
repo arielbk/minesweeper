@@ -5,6 +5,8 @@
  * - won
  * - running
  * - fresh
+ *
+ * Could everything else go into context??
  */
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
@@ -33,8 +35,6 @@ export const GameContext = createContext({
 
 export const GameProvider: React.FC = ({ children }) => {
   const [current, send] = useMachine(gameMachine);
-  const [isDead, setIsDead] = useState<boolean>(false);
-  const [isWinner, setIsWinner] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
   // todo: we are assuming that the grid is always square (for now)
@@ -49,8 +49,8 @@ export const GameProvider: React.FC = ({ children }) => {
   } = useContext(GridContext);
 
   useEffect(() => {
-    if (!isDead) setStartTime(Date.now());
-  }, [isDead]);
+    if (!current.matches('running')) setStartTime(Date.now());
+  }, [current.value]);
 
   // check if we have a winner
   useEffect(() => {
@@ -61,13 +61,12 @@ export const GameProvider: React.FC = ({ children }) => {
       return flagGrid[y][x];
     });
     // set winner state
-    if (allFlagged) setIsWinner(true);
+    if (allFlagged) send('WIN');
     // todo: reveal all cells but mine bg should not be red
   }, [flagCount, flagGrid, mineLocations]);
 
   const handleRestart = () => {
-    setIsDead(false);
-    setIsWinner(false);
+    send('RESTART');
     setStartTime(Date.now());
     resetGrids();
   };
@@ -78,8 +77,13 @@ export const GameProvider: React.FC = ({ children }) => {
     // set initial start time
     if (!startTime) setStartTime(Date.now());
     // ignore if dead, already revealed, or flagged
-    if (isDead || isRevealedGrid[y][x] === true || flagGrid[y][x]) return;
-    if (valueGrid[y][x] === 'M') setIsDead(true);
+    if (
+      current.matches('lost') ||
+      isRevealedGrid[y][x] === true ||
+      flagGrid[y][x]
+    )
+      return;
+    if (valueGrid[y][x] === 'M') send('LOSE');
     if (valueGrid[y][x] !== '0') return handleRevealCells([[x, y]]);
     const toReveal = findContiguousArea([x, y], valueGrid);
     handleRevealCells(toReveal);
@@ -88,8 +92,8 @@ export const GameProvider: React.FC = ({ children }) => {
   return (
     <GameContext.Provider
       value={{
-        isDead,
-        isWinner,
+        isDead: current.matches('lost'),
+        isWinner: current.matches('won'),
         isMouseDown,
         startTime,
         flagCount,

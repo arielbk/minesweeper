@@ -12,15 +12,23 @@
 
 import { createMachine } from 'xstate';
 
-const gameMachine = createMachine({
+/**
+ * Actions could go here:
+ * - handle restart
+ * - handle select cell
+ * - set mouse down
+ */
+
+interface GameContext {
+  startTime: number;
+  flagCount: number;
+  isMouseDown: boolean;
+}
+
+const gameMachine = createMachine<GameContext>({
   id: 'game',
-  initial: 'fresh',
+  initial: 'running',
   states: {
-    fresh: {
-      on: {
-        START: 'running',
-      },
-    },
     running: {
       on: {
         LOSE: 'lost',
@@ -37,6 +45,11 @@ const gameMachine = createMachine({
         RESTART: 'running',
       },
     },
+  },
+  context: {
+    startTime: 0,
+    flagCount: 0,
+    isMouseDown: false,
   },
 });
 
