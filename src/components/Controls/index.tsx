@@ -21,12 +21,14 @@ const Controls: React.FC = () => {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const intervalId = useRef<number>();
 
+  const isRunning = gameState?.matches('running');
+
   useEffect(() => {
-    if (gameState?.matches('running')) return clearInterval(intervalId.current);
+    if (!isRunning) return clearInterval(intervalId.current);
     intervalId.current = (setInterval(() => {
       const newTime = Math.floor((Date.now() - startTime) / 1000);
       setTimeElapsed(newTime);
-    }, 1000) as unknown) as number;
+    }, 200) as unknown) as number;
     return () => clearInterval(intervalId.current);
   }, [startTime, gameState]);
 

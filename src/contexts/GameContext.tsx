@@ -1,14 +1,3 @@
-/**
- * TODO: use xstate -- use a state machine for the state of the game
- * possible states:
- * - lost
- * - won
- * - running
- * - fresh
- *
- * Could everything else go into context??
- */
-
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { findContiguousArea } from 'utilities/mineCoordinates';
 import { useMachine } from '@xstate/react';
@@ -68,7 +57,7 @@ export const GameProvider: React.FC = ({ children }) => {
   } = useContext(GridContext);
 
   useEffect(() => {
-    if (!current.matches('running')) setStartTime(Date.now());
+    if (current.matches('running')) setStartTime(Date.now());
   }, [current.value]);
 
   // check if we have a winner
