@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import { GameContext } from 'contexts/GameContext';
 import { Box } from '@chakra-ui/layout';
+import { GameContext } from 'contexts/GameContext';
 import { GridContext } from 'contexts/GridContext';
+import React, { useContext } from 'react';
 
 const Settings: React.FC = () => {
-  const { startTime, isDead, isWinner } = useContext(GameContext);
+  const { startTime, gameState } = useContext(GameContext);
   const { gridLength, setGridLength } = useContext(GridContext);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -12,7 +12,7 @@ const Settings: React.FC = () => {
     setGridLength(newDimensions);
   };
 
-  if (!startTime && !isDead && !isWinner) return <div />;
+  if (!startTime && !gameState?.matches('running')) return <div />;
   return (
     <Box pb="2rem" position="absolute" left="50%" transform="translateX(-50%)">
       <label htmlFor="grid-dimensions">Grid dimensions: </label>

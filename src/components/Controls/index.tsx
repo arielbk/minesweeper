@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Gameface from './Gameface';
 
 const Container = styled.div`
@@ -17,24 +17,24 @@ const NumberField = styled.div`
 `;
 
 const Controls: React.FC = () => {
-  const { flagCount, startTime, isWinner, isDead } = useContext(GameContext);
+  const { gameState, flagCount, startTime } = useContext(GameContext);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const intervalId = useRef<number>();
 
   useEffect(() => {
-    if (isWinner || isDead) return clearInterval(intervalId.current);
+    if (gameState?.matches('running')) return clearInterval(intervalId.current);
     intervalId.current = (setInterval(() => {
       const newTime = Math.floor((Date.now() - startTime) / 1000);
       setTimeElapsed(newTime);
     }, 1000) as unknown) as number;
     return () => clearInterval(intervalId.current);
-  }, [startTime, isWinner, isDead]);
+  }, [startTime, gameState]);
 
   return (
     <Container>
       <NumberField>{flagCount}</NumberField>
       <Gameface />
-      <NumberField style={{ textAlign: 'right'}}>{timeElapsed}</NumberField>
+      <NumberField style={{ textAlign: 'right' }}>{timeElapsed}</NumberField>
     </Container>
   );
 };

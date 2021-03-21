@@ -19,13 +19,13 @@ import { createMachine } from 'xstate';
  * - set mouse down
  */
 
-interface GameContext {
+export interface GameContextType {
   startTime: number;
   flagCount: number;
   isMouseDown: boolean;
 }
 
-const gameMachine = createMachine<GameContext>({
+const gameMachine = createMachine<GameContextType>({
   id: 'game',
   initial: 'running',
   states: {

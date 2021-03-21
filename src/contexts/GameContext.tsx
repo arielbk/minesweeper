@@ -12,12 +12,11 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { findContiguousArea } from 'utilities/mineCoordinates';
 import { useMachine } from '@xstate/react';
-import gameMachine from './gameMachine';
+import gameMachine, { GameContextType } from './gameMachine';
 import { GridContext } from './GridContext';
+import { AnyEventObject, State } from 'xstate';
 
-export const GameContext = createContext({
-  isDead: false,
-  isWinner: false,
+const defaultValues = {
   startTime: 0,
   flagCount: 0,
   isMouseDown: false,
@@ -31,7 +30,27 @@ export const GameContext = createContext({
   setIsMouseDown: (isDown: boolean) => {
     /* */
   },
-});
+};
+
+type GameProps = {
+  startTime: number;
+  flagCount: number;
+  isMouseDown: boolean;
+  handleRestart: () => void;
+  handleSelectCell: (cell: [number, number]) => void;
+  setIsMouseDown: (isDown: boolean) => void;
+  gameState?: State<
+    GameContextType,
+    AnyEventObject,
+    any, // eslint-disable-line
+    {
+      value: any; // eslint-disable-line
+      context: GameContextType;
+    }
+  >;
+};
+
+export const GameContext = createContext<GameProps>(defaultValues);
 
 export const GameProvider: React.FC = ({ children }) => {
   const [current, send] = useMachine(gameMachine);
@@ -92,8 +111,7 @@ export const GameProvider: React.FC = ({ children }) => {
   return (
     <GameContext.Provider
       value={{
-        isDead: current.matches('lost'),
-        isWinner: current.matches('won'),
+        gameState: current,
         isMouseDown,
         startTime,
         flagCount,
