@@ -1,20 +1,12 @@
-import React, { createContext, useState, useEffect } from 'react';
-import useValueGrid from 'hooks/useValueGrid';
-import useIsRevealedGrid from 'hooks/useIsRevealedGrid';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { findContiguousArea } from 'utilities/mineCoordinates';
-import useFlagGrid from 'hooks/useFlagGrid';
+import { useMachine } from '@xstate/react';
+import gameMachine, { GameContextType } from './gameMachine';
+import { GridContext } from './GridContext';
+import { AnyEventObject, State } from 'xstate';
 
-export const GameContext = createContext({
-  isDead: false,
-  isWinner: false,
+const defaultValues = {
   startTime: 0,
-  currentScore: 0,
-  // todo: these could go in a settings context?
-  gridWidth: 15,
-  gridHeight: 15,
-  valueGrid: [['M']],
-  isRevealedGrid: [[false]],
-  flagGrid: [[false]],
   flagCount: 0,
   isMouseDown: false,
 
@@ -24,39 +16,49 @@ export const GameContext = createContext({
   handleSelectCell: (cell: [number, number]) => {
     /* */
   },
-  handleFlagCell: (cell: [number, number]) => {
-    /* */
-  },
   setIsMouseDown: (isDown: boolean) => {
     /* */
   },
-  setGridDimensions: (dimensions: number) => {
-    /* */
-  },
-});
+};
+
+type GameProps = {
+  startTime: number;
+  flagCount: number;
+  isMouseDown: boolean;
+  handleRestart: () => void;
+  handleSelectCell: (cell: [number, number]) => void;
+  setIsMouseDown: (isDown: boolean) => void;
+  gameState?: State<
+    GameContextType,
+    AnyEventObject,
+    any, // eslint-disable-line
+    {
+      value: any; // eslint-disable-line
+      context: GameContextType;
+    }
+  >;
+};
+
+export const GameContext = createContext<GameProps>(defaultValues);
 
 export const GameProvider: React.FC = ({ children }) => {
-  const [isDead, setIsDead] = useState<boolean>(false);
-  const [isWinner, setIsWinner] = useState<boolean>(false);
+  const [current, send] = useMachine(gameMachine);
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-  const [gridDimensions, setGridDimensions] = useState<number>(15);
   // todo: we are assuming that the grid is always square (for now)
-  const gridWidth = gridDimensions;
-  const gridHeight = gridDimensions;
-
-  //grid values
-  const gridParams = { gridWidth, gridHeight, startTime };
-  const { valueGrid, mineLocations } = useValueGrid(gridParams);
-  const { isRevealedGrid, handleRevealCells } = useIsRevealedGrid(gridParams);
-  const { flagGrid, handleFlagCell, flagCount } = useFlagGrid({
-    ...gridParams,
-    mineCount: mineLocations.length,
-  });
+  const {
+    mineLocations,
+    flagGrid,
+    flagCount,
+    isRevealedGrid,
+    valueGrid,
+    handleRevealCells,
+    resetGrids,
+  } = useContext(GridContext);
 
   useEffect(() => {
-    if (!isDead) setStartTime(Date.now());
-  }, [isDead]);
+    if (current.matches('running')) setStartTime(Date.now());
+  }, [current.value]);
 
   // check if we have a winner
   useEffect(() => {
@@ -67,14 +69,14 @@ export const GameProvider: React.FC = ({ children }) => {
       return flagGrid[y][x];
     });
     // set winner state
-    if (allFlagged) setIsWinner(true);
+    if (allFlagged) send('WIN');
     // todo: reveal all cells but mine bg should not be red
   }, [flagCount, flagGrid, mineLocations]);
 
   const handleRestart = () => {
-    setIsDead(false);
-    setIsWinner(false);
+    send('RESTART');
     setStartTime(Date.now());
+    resetGrids();
   };
 
   // determines what to do with selected cell
@@ -83,8 +85,13 @@ export const GameProvider: React.FC = ({ children }) => {
     // set initial start time
     if (!startTime) setStartTime(Date.now());
     // ignore if dead, already revealed, or flagged
-    if (isDead || isRevealedGrid[y][x] === true || flagGrid[y][x]) return;
-    if (valueGrid[y][x] === 'M') setIsDead(true);
+    if (
+      current.matches('lost') ||
+      isRevealedGrid[y][x] === true ||
+      flagGrid[y][x]
+    )
+      return;
+    if (valueGrid[y][x] === 'M') send('LOSE');
     if (valueGrid[y][x] !== '0') return handleRevealCells([[x, y]]);
     const toReveal = findContiguousArea([x, y], valueGrid);
     handleRevealCells(toReveal);
@@ -93,21 +100,12 @@ export const GameProvider: React.FC = ({ children }) => {
   return (
     <GameContext.Provider
       value={{
-        isDead,
-        isWinner,
+        gameState: current,
         isMouseDown,
         startTime,
-        currentScore: 0,
-        gridWidth,
-        gridHeight,
-        setGridDimensions,
-        valueGrid,
-        isRevealedGrid,
-        flagGrid,
         flagCount,
         handleRestart,
         handleSelectCell,
-        handleFlagCell,
         setIsMouseDown,
       }}
     >

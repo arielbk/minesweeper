@@ -1,25 +1,19 @@
 import { useState, useEffect } from 'react';
 
 interface GridParams {
-  gridWidth: number;
-  gridHeight: number;
-  startTime: number;
+  gridLength: number;
 }
 
-const useIsRevealedGrid = ({
-  gridWidth,
-  gridHeight,
-  startTime,
-}: GridParams) => {
+const useIsRevealedGrid = ({ gridLength }: GridParams) => {
   const [isRevealedGrid, setIsRevealedGrid] = useState<boolean[][]>(
-    new Array(gridHeight).fill(new Array(gridWidth).fill(false)),
+    new Array(gridLength).fill(new Array(gridLength).fill(false)),
   );
 
-  useEffect(() => {
+  const initializeGrid = () => {
     setIsRevealedGrid(
-      new Array(gridHeight).fill(new Array(gridWidth).fill(false)),
+      new Array(gridLength).fill(new Array(gridLength).fill(false)),
     );
-  }, [gridHeight, gridWidth, startTime]);
+  };
 
   // sets cells to revealed
   const handleRevealCells = (cells: [number, number][]): void => {
@@ -33,6 +27,7 @@ const useIsRevealedGrid = ({
   return {
     isRevealedGrid,
     handleRevealCells,
+    reset: initializeGrid,
   };
 };
 

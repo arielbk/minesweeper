@@ -1,13 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { calculateAdjacentMineCount } from 'utilities/mineCoordinates';
 
 interface GridParams {
-  gridWidth: number;
-  gridHeight: number;
-  startTime: number;
+  gridLength: number;
 }
 
-const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
+const useValueGrid = ({ gridLength }: GridParams) => {
   // 2d array, number of adjacent mines
   const [valueGrid, setValueGrid] = useState<string[][]>([[]]);
   // locations of all mines
@@ -16,13 +14,13 @@ const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
   // initializes grid values
   const initializeGrid = () => {
     // determine mine locations
-    const mineCount = Math.floor((gridWidth * gridHeight) / 6);
+    const mineCount = Math.floor((gridLength * gridLength) / 6);
     const minesToSet: [number, number][] = [];
 
     while (minesToSet.length < mineCount) {
       const mineLocation: [number, number] = [
-        Math.floor(Math.random() * gridWidth),
-        Math.floor(Math.random() * gridHeight),
+        Math.floor(Math.random() * gridLength),
+        Math.floor(Math.random() * gridLength),
       ];
       // ensure there are no duplicate mines
       if (
@@ -39,9 +37,9 @@ const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
 
     // populate value grid
     const valuesToSet: string[][] = [];
-    for (let y = 0; y < gridWidth; y++) {
+    for (let y = 0; y < gridLength; y++) {
       const row: string[] = [];
-      for (let x = 0; x < gridHeight; x++) {
+      for (let x = 0; x < gridLength; x++) {
         const adjacentMines = calculateAdjacentMineCount([x, y], minesToSet);
         row.push(adjacentMines);
       }
@@ -53,9 +51,7 @@ const useValueGrid = ({ gridWidth, gridHeight, startTime }: GridParams) => {
     setValueGrid(valuesToSet);
   };
 
-  useEffect(initializeGrid, [startTime, gridWidth, gridHeight]);
-
-  return { valueGrid, mineLocations };
+  return { valueGrid, mineLocations, reset: initializeGrid };
 };
 
 export default useValueGrid;

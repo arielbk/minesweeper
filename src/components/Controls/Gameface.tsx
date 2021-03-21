@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
 import styled from '@emotion/styled';
+import React, { useContext } from 'react';
 import { GameContext } from '../../contexts/GameContext';
 
 const GamefaceTile = styled.button`
@@ -19,13 +19,11 @@ const GamefaceTile = styled.button`
 `;
 
 const Gameface: React.FC = () => {
-  const { isDead, isWinner, handleRestart, isMouseDown } = useContext(
-    GameContext,
-  );
+  const { gameState, handleRestart, isMouseDown } = useContext(GameContext);
   let face = '🙂';
   if (isMouseDown) face = '😮';
-  if (isDead) face = '😵';
-  if (isWinner) face = '😎';
+  if (gameState?.matches('lost')) face = '😵';
+  if (gameState?.matches('won')) face = '😎';
   return (
     <GamefaceTile onClick={handleRestart}>
       <span role="img" aria-label="game face, restart game">

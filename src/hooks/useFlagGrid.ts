@@ -1,26 +1,18 @@
 import { useState, useEffect } from 'react';
 
 interface GridParams {
-  gridWidth: number;
-  gridHeight: number;
+  gridLength: number;
   mineCount: number;
-  startTime: number;
 }
 
-const useFlagGrid = ({
-  gridWidth,
-  gridHeight,
-  mineCount,
-  startTime,
-}: GridParams) => {
+const useFlagGrid = ({ gridLength, mineCount }: GridParams) => {
   const [flagGrid, setFlagGrid] = useState<boolean[][]>([]);
   const [flagCount, setFlagCount] = useState<number>(mineCount);
 
-  // initialize flag grid with no flags and set flags left
-  useEffect(() => {
-    setFlagGrid(new Array(gridHeight).fill(new Array(gridWidth).fill(false)));
+  const initializeGrid = () => {
+    setFlagGrid(new Array(gridLength).fill(new Array(gridLength).fill(false)));
     setFlagCount(mineCount);
-  }, [gridHeight, gridWidth, startTime, mineCount]);
+  };
 
   // toggles flag cell
   const handleFlagCell = (cell: [number, number]): void => {
@@ -41,6 +33,7 @@ const useFlagGrid = ({
     flagGrid,
     handleFlagCell,
     flagCount,
+    reset: initializeGrid,
   };
 };
 
