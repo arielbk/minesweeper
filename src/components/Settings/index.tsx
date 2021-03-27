@@ -14,7 +14,13 @@ const Settings: React.FC = () => {
 
   if (!startTime && !gameState?.matches('running')) return <div />;
   return (
-    <Box pb="2rem" position="absolute" left="50%" transform="translateX(-50%)">
+    <Box
+      pb="2rem"
+      position="absolute"
+      left="50%"
+      transform="translateX(-50%)"
+      fontFamily="Courier, Monospace"
+    >
       <label htmlFor="grid-dimensions">Grid dimensions: </label>
       <select
         name="grid-dimensions"
