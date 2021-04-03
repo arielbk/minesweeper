@@ -30,7 +30,7 @@ const Controls: React.FC = () => {
       setTimeElapsed(newTime);
     }, 200) as unknown) as number;
     return () => clearInterval(intervalId.current);
-  }, [startTime, gameState]);
+  }, [startTime, gameState, isRunning]);
 
   return (
     <Container>

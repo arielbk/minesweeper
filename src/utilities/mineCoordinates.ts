@@ -57,6 +57,7 @@ const getAdjacentCellCoordinates = (
 };
 
 // find an area of safe cells (including border cells)
+// todo: check this out, it sometimes doesn't do all of the cells it should!
 export const findContiguousArea = (
   [x, y]: [number, number],
   valueGrid: string[][],

@@ -1,18 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 
 interface GridParams {
   gridLength: number;
   mineCount: number;
 }
 
-const useFlagGrid = ({ gridLength, mineCount }: GridParams) => {
+interface FlagGrid {
+  flagGrid: boolean[][];
+  handleFlagCell: (cell: [number, number]) => void;
+  flagCount: number;
+  reset: () => void;
+}
+
+const useFlagGrid = ({ gridLength, mineCount }: GridParams): FlagGrid => {
   const [flagGrid, setFlagGrid] = useState<boolean[][]>([]);
   const [flagCount, setFlagCount] = useState<number>(mineCount);
 
-  const initializeGrid = () => {
+  const initializeGrid = useCallback(() => {
     setFlagGrid(new Array(gridLength).fill(new Array(gridLength).fill(false)));
     setFlagCount(mineCount);
-  };
+  }, [mineCount, gridLength]);
 
   // toggles flag cell
   const handleFlagCell = (cell: [number, number]): void => {

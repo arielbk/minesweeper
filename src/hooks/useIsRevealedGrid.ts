@@ -1,19 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 
 interface GridParams {
   gridLength: number;
 }
 
-const useIsRevealedGrid = ({ gridLength }: GridParams) => {
+interface IsRevealedGrid {
+  isRevealedGrid: boolean[][];
+  handleRevealCells: (cells: [number, number][]) => void;
+  reset: () => void;
+}
+
+const useIsRevealedGrid = ({ gridLength }: GridParams): IsRevealedGrid => {
   const [isRevealedGrid, setIsRevealedGrid] = useState<boolean[][]>(
     new Array(gridLength).fill(new Array(gridLength).fill(false)),
   );
 
-  const initializeGrid = () => {
+  const initializeGrid = useCallback(() => {
     setIsRevealedGrid(
       new Array(gridLength).fill(new Array(gridLength).fill(false)),
     );
-  };
+  }, [gridLength]);
 
   // sets cells to revealed
   const handleRevealCells = (cells: [number, number][]): void => {

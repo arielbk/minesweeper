@@ -58,7 +58,7 @@ export const GameProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (current.matches('running')) setStartTime(Date.now());
-  }, [current.value]);
+  }, [current, current.value]);
 
   // check if we have a winner
   useEffect(() => {
@@ -71,7 +71,7 @@ export const GameProvider: React.FC = ({ children }) => {
     // set winner state
     if (allFlagged) send('WIN');
     // todo: reveal all cells but mine bg should not be red
-  }, [flagCount, flagGrid, mineLocations]);
+  }, [flagCount, flagGrid, mineLocations, current, send]);
 
   const handleRestart = () => {
     send('RESTART');

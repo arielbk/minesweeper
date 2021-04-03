@@ -1,18 +1,24 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { calculateAdjacentMineCount } from 'utilities/mineCoordinates';
 
 interface GridParams {
   gridLength: number;
 }
 
-const useValueGrid = ({ gridLength }: GridParams) => {
+interface ValueGrid {
+  valueGrid: string[][];
+  mineLocations: [number, number][];
+  reset: () => void;
+}
+
+const useValueGrid = ({ gridLength }: GridParams): ValueGrid => {
   // 2d array, number of adjacent mines
   const [valueGrid, setValueGrid] = useState<string[][]>([[]]);
   // locations of all mines
   const [mineLocations, setMineLocations] = useState<[number, number][]>([]);
 
   // initializes grid values
-  const initializeGrid = () => {
+  const initializeGrid = useCallback(() => {
     // determine mine locations
     const mineCount = Math.floor((gridLength * gridLength) / 6);
     const minesToSet: [number, number][] = [];
@@ -49,7 +55,7 @@ const useValueGrid = ({ gridLength }: GridParams) => {
     minesToSet.forEach((mine) => (valuesToSet[mine[1]][mine[0]] = 'M'));
 
     setValueGrid(valuesToSet);
-  };
+  }, [gridLength]);
 
   return { valueGrid, mineLocations, reset: initializeGrid };
 };

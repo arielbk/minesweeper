@@ -1,7 +1,7 @@
 import useFlagGrid from 'hooks/useFlagGrid';
 import useIsRevealedGrid from 'hooks/useIsRevealedGrid';
 import useValueGrid from 'hooks/useValueGrid';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 
 export const GridContext = createContext({
   gridLength: 15,
@@ -47,16 +47,16 @@ export const GridProvider: React.FC = ({ children }) => {
     mineCount: mineLocations.length,
   });
 
-  const resetGrids = () => {
+  const resetGrids = useCallback(() => {
     resetValues();
     resetRevealed();
     resetFlags();
-  };
+  }, [resetValues, resetRevealed, resetFlags]);
 
   // reset grids on start or settings change
   useEffect(() => {
     resetGrids();
-  }, [gridLength]);
+  }, [gridLength, resetGrids]);
 
   return (
     <GridContext.Provider
