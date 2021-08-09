@@ -100,6 +100,8 @@ export const findContiguousArea = (
 
     // collate connected empty cells
     if (valueGrid[scanY])
+      // todo: revisit and research this eslint-rule
+      // eslint-disable-next-line
       valueGrid[scanY].forEach((val, i) => {
         if (val !== '0') return;
         const freeCell: [number, number] = [i, scanY];
