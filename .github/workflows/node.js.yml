@@ -1,39 +1,39 @@
-name: Node Github CI
+# name: Node Github CI
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
-      - name: install deps
-        run: |
-          yarn install
-      - name: run cypress
-        uses: cypress-io/github-action@v2
-        with:
-          start: yarn start
-          wait-on: http://localhost:3000
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: install deps
+#         run: |
+#           yarn install
+#       - name: run cypress
+#         uses: cypress-io/github-action@v2
+#         with:
+#           start: yarn start
+#           wait-on: http://localhost:3000
 
-  deploy:
-    needs: [test]
-    runs-on: ubuntu-latest
+#   deploy:
+#     needs: [test]
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: SSH and build react app
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /var/www/minesweeper
-            sudo git reset --hard
-            sudo git pull origin master
-            sudo yarn install --production
-            sudo yarn build
+#     steps:
+#       - name: SSH and build react app
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.SSH_HOST }}
+#           username: ${{ secrets.SSH_USERNAME }}
+#           key: ${{ secrets.SSH_KEY }}
+#           script: |
+#             cd /var/www/minesweeper
+#             sudo git reset --hard
+#             sudo git pull origin master
+#             sudo yarn install --production
+#             sudo yarn build
