@@ -56,86 +56,54 @@ const getAdjacentCellCoordinates = (
   );
 };
 
-// find an area of safe cells (including border cells)
-// todo: check this out, it sometimes doesn't do all of the cells it should!
+// start this find contiguous area
 export const findContiguousArea = (
   [x, y]: [number, number],
   valueGrid: string[][],
 ): [number, number][] => {
-  const areaCells: [number, number][] = [];
-  let scanX: number = x;
+  // starts with the current cell to be revealed
+  const cellsToReveal: [number, number][] = [[x, y]];
+  const cellsToCheck: [number, number][] = [[x, y]];
+  const cellsChecked: [number, number][] = [];
 
-  // add touching coordinates of the current line
-  let isLeftChecked = false;
-  while (true) {
-    // check the left side
-    if (valueGrid[y][scanX] === '0' && !areaCells.includes([scanX, y]))
-      areaCells.push([scanX, y]);
-    // if not an empty cell
-    else {
-      // finish current line scan
-      if (isLeftChecked) break;
-      // move to right side
-      else {
-        scanX = x;
-        isLeftChecked = true;
-      }
-    }
-    // move left or right (depending on flag)
-    if (isLeftChecked) scanX += 1;
-    else scanX -= 1;
-  }
+  const isEmptyCell = (cell: [number, number]): boolean => {
+    return valueGrid[cell[1]][cell[0]] === '0';
+  };
 
-  // scan upper and lower lines for touching coordinates
-  let prevAreaRow: [number, number][] = areaCells;
-  // start one line above toCheck
-  let scanY: number = y - 1;
-  // if checking upper is done
-  let isUpperDone = false;
+  const getRemainingCells = (toCheck: [number, number][]) =>
+    toCheck
+      .map((cell) => JSON.stringify(cell))
+      .filter(
+        (cell) =>
+          !cellsChecked.map((cell) => JSON.stringify(cell)).includes(cell),
+      )
+      .map((cell) => JSON.parse(cell));
 
-  // iterate through upper then lower rows until none are touching
-  while (prevAreaRow.length || !isUpperDone) {
-    // current row area to push to
-    const rowArea: [number, number][] = [];
+  let remainingCells = getRemainingCells(cellsToCheck);
 
-    // collate connected empty cells
-    if (valueGrid[scanY])
-      // todo: revisit and research this eslint-rule
-      // eslint-disable-next-line
-      valueGrid[scanY].forEach((val, i) => {
-        if (val !== '0') return;
-        const freeCell: [number, number] = [i, scanY];
-        const isArea = prevAreaRow.some((areaCell) =>
-          isCoordinateAdjacent(areaCell, freeCell),
-        );
-        if (isArea) rowArea.push(freeCell);
+  while (remainingCells.length > 0) {
+    remainingCells.forEach((currentCell) => {
+      const adjacentCells = getAdjacentCellCoordinates(
+        [currentCell[0], currentCell[1]],
+        valueGrid[0].length,
+        valueGrid.length,
+      );
+
+      // get adjacent cells if the current one is empty
+      adjacentCells.forEach((cell) => {
+        // all adjacent cells are revealed
+        if (!cellsToReveal.includes(cell)) cellsToReveal.push(cell);
+        // empty adjacent cells are checked
+        if (isEmptyCell(cell) && !cellsToCheck.includes(cell))
+          cellsToCheck.push(cell);
       });
 
-    // push the current previous row into the area and create a new prev
-    prevAreaRow
-      .filter((cell) => !areaCells.includes(cell))
-      .forEach((cell) => {
-        areaCells.push(cell);
-        // add any adjacent cells
-        getAdjacentCellCoordinates(
-          [cell[0], cell[1]],
-          valueGrid[0].length,
-          valueGrid.length,
-        )
-          .filter((coordinate) => !areaCells.includes(coordinate))
-          .forEach((coordinate) => areaCells.push(coordinate));
-      });
-
-    if (!rowArea.length && !isUpperDone) {
-      isUpperDone = true;
-      prevAreaRow = areaCells;
-    } else {
-      prevAreaRow = rowArea;
-    }
-
-    if (isUpperDone) scanY += 1;
-    else scanY -= 1;
+      // add current cell to checked cells
+      cellsChecked.push(currentCell);
+    });
+    // determines if the loop should run again
+    remainingCells = getRemainingCells(cellsToCheck);
   }
 
-  return areaCells;
+  return cellsToReveal;
 };
