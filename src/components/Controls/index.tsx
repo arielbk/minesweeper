@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
+import { format } from 'date-fns';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Gameface from './Gameface';
 
@@ -25,10 +26,10 @@ const Controls: React.FC = () => {
 
   useEffect(() => {
     if (!isRunning) return clearInterval(intervalId.current);
-    intervalId.current = (setInterval(() => {
+    intervalId.current = setInterval(() => {
       const newTime = Math.floor((Date.now() - startTime) / 1000);
       setTimeElapsed(newTime);
-    }, 200) as unknown) as number;
+    }, 200) as unknown as number;
     return () => clearInterval(intervalId.current);
   }, [startTime, gameState, isRunning]);
 
@@ -36,7 +37,9 @@ const Controls: React.FC = () => {
     <Container>
       <NumberField>{flagCount}</NumberField>
       <Gameface />
-      <NumberField style={{ textAlign: 'right' }}>{timeElapsed}</NumberField>
+      <NumberField style={{ textAlign: 'right' }}>
+        {format(timeElapsed * 1000, 'm:ss')}
+      </NumberField>
     </Container>
   );
 };
