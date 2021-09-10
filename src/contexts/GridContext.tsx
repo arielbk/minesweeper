@@ -1,7 +1,8 @@
 import useFlagGrid from 'hooks/useFlagGrid';
 import useIsRevealedGrid from 'hooks/useIsRevealedGrid';
+import useLocalStorage from 'hooks/useLocalStorage';
 import useValueGrid from 'hooks/useValueGrid';
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect } from 'react';
 
 export const GridContext = createContext({
   gridLength: 15,
@@ -25,13 +26,18 @@ export const GridContext = createContext({
 });
 
 export const GridProvider: React.FC = ({ children }) => {
-  const [gridLength, setGridLength] = useState<number>(15);
+  const [gridLength, setGridLength] = useLocalStorage<number>(
+    'minesweeper-grid-length',
+    15,
+  );
 
   //grid values
   const gridParams = { gridLength };
-  const { valueGrid, mineLocations, reset: resetValues } = useValueGrid(
-    gridParams,
-  );
+  const {
+    valueGrid,
+    mineLocations,
+    reset: resetValues,
+  } = useValueGrid(gridParams);
   const {
     isRevealedGrid,
     handleRevealCells,

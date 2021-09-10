@@ -1,7 +1,8 @@
-import { Box } from '@chakra-ui/layout';
+import { Box, Flex } from '@chakra-ui/layout';
 import { GameContext } from 'contexts/GameContext';
 import { GridContext } from 'contexts/GridContext';
 import React, { useContext } from 'react';
+import { IoGridSharp } from 'react-icons/io5';
 
 const Settings: React.FC = () => {
   const { startTime, gameState } = useContext(GameContext);
@@ -14,14 +15,21 @@ const Settings: React.FC = () => {
 
   if (!startTime && !gameState?.matches('running')) return <div />;
   return (
-    <Box
+    <Flex
+      alignItems="center"
       pb="2rem"
       position="absolute"
-      left="50%"
+      right="0"
+      top={-4}
       transform="translateX(-50%)"
       fontFamily="Courier, Monospace"
+      fontSize="1.4rem"
     >
-      <label htmlFor="grid-dimensions">Grid dimensions: </label>
+      <Box fontSize="1.5rem" display="inline-block" mr={4} color="#ddd">
+        <label htmlFor="grid-dimensions">
+          <IoGridSharp />{' '}
+        </label>
+      </Box>
       <select
         name="grid-dimensions"
         value={gridLength}
@@ -34,7 +42,7 @@ const Settings: React.FC = () => {
         <option value={20}>20</option>
         <option value={25}>25</option>
       </select>
-    </Box>
+    </Flex>
   );
 };
 

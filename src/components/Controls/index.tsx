@@ -1,7 +1,9 @@
+import { Box, Flex } from '@chakra-ui/layout';
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
 import { format } from 'date-fns';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { MdFlag } from 'react-icons/md';
 import Gameface from './Gameface';
 
 const Container = styled.div`
@@ -35,7 +37,14 @@ const Controls: React.FC = () => {
 
   return (
     <Container>
-      <NumberField>{flagCount}</NumberField>
+      <NumberField>
+        <Flex align="center">
+          {flagCount}
+          <Box display="inline-block" fontSize="1.2rem" ml={2} color="#ddd">
+            <MdFlag />
+          </Box>
+        </Flex>
+      </NumberField>
       <Gameface />
       <NumberField style={{ textAlign: 'right' }}>
         {format(timeElapsed * 1000, 'm:ss')}
