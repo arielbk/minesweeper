@@ -1,21 +1,22 @@
+import { Box, Flex } from '@chakra-ui/layout';
+import Header from 'components/Header';
+import { GridProvider } from 'contexts/GridContext';
 import React from 'react';
-import { GameProvider } from './contexts/GameContext';
 import Grid from './components/common/Grid';
 import Controls from './components/Controls';
-import Settings from 'components/Settings';
-import { Box, Heading } from '@chakra-ui/layout';
-import { GridProvider } from 'contexts/GridContext';
+import { GameProvider } from './contexts/GameContext';
 
 const App: React.FC = () => {
   return (
     <GridProvider>
       <GameProvider>
-        <Box mx="auto" my="3rem" width="500px">
-          <Heading mb={0}>Minesweeper</Heading>
-          <Grid />
-          <Controls />
-        </Box>
-        <Settings />
+        <Header />
+        <Flex mx="auto" mt="80px" width="500px">
+          <Box>
+            <Grid />
+            <Controls />
+          </Box>
+        </Flex>
       </GameProvider>
     </GridProvider>
   );

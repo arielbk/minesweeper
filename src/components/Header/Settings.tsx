@@ -15,16 +15,7 @@ const Settings: React.FC = () => {
 
   if (!startTime && !gameState?.matches('running')) return <div />;
   return (
-    <Flex
-      alignItems="center"
-      pb="2rem"
-      position="absolute"
-      right="0"
-      top={-4}
-      transform="translateX(-50%)"
-      fontFamily="Courier, Monospace"
-      fontSize="1.4rem"
-    >
+    <Flex fontFamily="Courier, Monospace" fontSize="1.4rem">
       <Box fontSize="1.5rem" display="inline-block" mr={4} color="#ddd">
         <label htmlFor="grid-dimensions">
           <IoGridSharp />{' '}
