@@ -1,4 +1,5 @@
-import { Box, Flex } from '@chakra-ui/layout';
+import { Button } from '@chakra-ui/button';
+import { Box } from '@chakra-ui/layout';
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
 import { format } from 'date-fns';
@@ -20,7 +21,8 @@ const NumberField = styled.div`
 `;
 
 const Controls: React.FC = () => {
-  const { gameState, flagCount, startTime } = useContext(GameContext);
+  const { gameState, flagCount, startTime, toggleFlagMode, isFlagMode } =
+    useContext(GameContext);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const intervalId = useRef<number>();
 
@@ -38,12 +40,22 @@ const Controls: React.FC = () => {
   return (
     <Container>
       <NumberField>
-        <Flex align="center">
+        <Button
+          variant="ghost"
+          fontSize="30px"
+          align="center"
+          onClick={toggleFlagMode}
+        >
           {flagCount}
-          <Box display="inline-block" fontSize="1.2rem" ml={2} color="#ddd">
+          <Box
+            display="inline-block"
+            fontSize="1.2rem"
+            ml={2}
+            color={isFlagMode ? '#f00' : '#ddd'}
+          >
             <MdFlag />
           </Box>
-        </Flex>
+        </Button>
       </NumberField>
       <Gameface />
       <NumberField style={{ textAlign: 'right' }}>

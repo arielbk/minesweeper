@@ -19,6 +19,11 @@ const defaultValues = {
   setIsMouseDown: (isDown: boolean) => {
     /* */
   },
+
+  isFlagMode: false,
+  toggleFlagMode: () => {
+    //
+  },
 };
 
 type GameProps = {
@@ -37,6 +42,8 @@ type GameProps = {
       context: GameContextType;
     }
   >;
+  isFlagMode: boolean;
+  toggleFlagMode: () => void;
 };
 
 export const GameContext = createContext<GameProps>(defaultValues);
@@ -45,6 +52,7 @@ export const GameProvider: React.FC = ({ children }) => {
   const [current, send] = useMachine(gameMachine);
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
+  const [isFlagMode, setIsFlagMode] = useState<boolean>(false);
   // todo: we are assuming that the grid is always square (for now)
   const {
     mineLocations,
@@ -97,6 +105,8 @@ export const GameProvider: React.FC = ({ children }) => {
     handleRevealCells(toReveal);
   };
 
+  const toggleFlagMode = () => setIsFlagMode((prev) => !prev);
+
   return (
     <GameContext.Provider
       value={{
@@ -107,6 +117,8 @@ export const GameProvider: React.FC = ({ children }) => {
         handleRestart,
         handleSelectCell,
         setIsMouseDown,
+        isFlagMode,
+        toggleFlagMode,
       }}
     >
       <>{children}</>

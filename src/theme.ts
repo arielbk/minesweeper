@@ -31,4 +31,14 @@ export const theme = extendTheme({
       },
     }),
   },
+  components: {
+    Button: {
+      baseStyle: {
+        _focus: {
+          boxShadow: 'none',
+          outline: '3px solid #ccc',
+        },
+      },
+    },
+  },
 });

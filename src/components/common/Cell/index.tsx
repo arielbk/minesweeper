@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import React, { ReactElement } from 'react';
+import { GameContext } from 'contexts/GameContext';
+import React, { ReactElement, useContext } from 'react';
 import { FaBomb } from 'react-icons/fa';
 import { MdFlag } from 'react-icons/md';
 
@@ -61,6 +62,7 @@ const Cell: React.FC<Props> = ({
   isFlagged,
   onFlagCell,
 }) => {
+  const { isFlagMode } = useContext(GameContext);
   let label: string | ReactElement = value;
   if (value === 'M') label = <FaBomb />;
   if (value === '0') label = '';
@@ -72,7 +74,7 @@ const Cell: React.FC<Props> = ({
     <CellButton
       style={{ fontSize }}
       onContextMenu={onFlagCell}
-      onClick={onSelectCell}
+      onClick={isFlagMode ? onFlagCell : onSelectCell}
     >
       {isFlagged ? <MdFlag /> : ''}
       {process.env.REACT_APP_DEBUG_MODE ? label : ''}
