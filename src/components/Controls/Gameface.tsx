@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import React, { useContext } from 'react';
+import confetti from 'canvas-confetti';
+import React, { useContext, useEffect } from 'react';
 import { GameContext } from '../../contexts/GameContext';
 
 const GamefaceTile = styled.button`
@@ -18,12 +19,39 @@ const GamefaceTile = styled.button`
   }
 `;
 
+// confetti animation
+function confettiFrame() {
+  confetti({
+    particleCount: 220,
+    angle: 60,
+    spread: 120,
+    origin: { x: 0, y: 0.8 },
+  });
+
+  confetti({
+    particleCount: 220,
+    angle: 120,
+    spread: 120,
+    origin: { x: 1, y: 0.8 },
+  });
+}
+
 const Gameface: React.FC = () => {
   const { gameState, handleRestart, isMouseDown } = useContext(GameContext);
   let face = '🙂';
   if (isMouseDown) face = '😮';
-  if (gameState?.matches('lost')) face = '😵';
-  if (gameState?.matches('won')) face = '😎';
+  const hasLost = gameState?.matches('lost');
+  const hasWon = gameState?.matches('won');
+  if (hasLost) face = '😵';
+  if (hasWon) face = '😎';
+
+  useEffect(() => {
+    if (!hasWon) return;
+    requestAnimationFrame(confettiFrame);
+    setTimeout(() => requestAnimationFrame(confettiFrame), 1500);
+    setTimeout(() => requestAnimationFrame(confettiFrame), 3500);
+  }, [hasWon]);
+
   return (
     <GamefaceTile onClick={handleRestart}>
       <span role="img" aria-label="game face, restart game">
