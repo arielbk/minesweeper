@@ -74,7 +74,9 @@ const Cell: React.FC<Props> = ({
     <CellButton
       style={{ fontSize }}
       onContextMenu={onFlagCell}
-      onClick={isFlagMode ? onFlagCell : onSelectCell}
+      onClick={(e) =>
+        isFlagMode || e.shiftKey ? onFlagCell(e) : onSelectCell()
+      }
     >
       {isFlagged ? <MdFlag /> : ''}
       {process.env.REACT_APP_DEBUG_MODE ? label : ''}
