@@ -17,13 +17,8 @@ const Container = styled.div<{ width: number; height: number }>`
 
 const Grid: React.FC = () => {
   const { setIsMouseDown, handleSelectCell } = useContext(GameContext);
-  const {
-    gridLength,
-    valueGrid,
-    isRevealedGrid,
-    flagGrid,
-    handleFlagCell,
-  } = useContext(GridContext);
+  const { gridLength, valueGrid, isRevealedGrid, flagGrid, handleFlagCell } =
+    useContext(GridContext);
   return (
     <Container
       data-cy="grid"
@@ -31,6 +26,7 @@ const Grid: React.FC = () => {
       height={gridLength}
       onMouseDown={() => setIsMouseDown(true)}
       onMouseUp={() => setIsMouseDown(false)}
+      onContextMenu={(e) => e.preventDefault()}
     >
       {valueGrid.map((row, y) => {
         return row.map((cell, x) => (

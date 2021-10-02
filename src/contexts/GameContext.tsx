@@ -62,11 +62,14 @@ export const GameProvider: React.FC = ({ children }) => {
     valueGrid,
     handleRevealCells,
     resetGrids,
+    gridLength,
   } = useContext(GridContext);
 
   useEffect(() => {
     if (current.matches('running')) setStartTime(Date.now());
-  }, [current, current.value]);
+    // reset flag mode
+    setIsFlagMode(false);
+  }, [current, current.value, gridLength]);
 
   // check if we have a winner
   useEffect(() => {
@@ -84,6 +87,7 @@ export const GameProvider: React.FC = ({ children }) => {
   const handleRestart = () => {
     send('RESTART');
     setStartTime(Date.now());
+    setIsFlagMode(false);
     resetGrids();
   };
 
