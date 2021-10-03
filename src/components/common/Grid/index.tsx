@@ -7,8 +7,10 @@ import Cell from '../Cell';
 const Container = styled.div<{ width: number; height: number }>`
   margin: 1rem auto;
   box-sizing: content-box;
-  width: 500px;
-  height: 500px;
+  width: min(90vw, 70vh);
+  height: min(90vw, 70vh);
+  /* max-width: 800px;
+  max-height: 800px; */
   display: grid;
   grid-template-rows: ${({ height }) => `repeat(${height}, 1fr)`};
   grid-template-columns: ${({ width }) => `repeat(${width}, 1fr)`};
