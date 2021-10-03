@@ -11,7 +11,7 @@ const App: React.FC = () => {
     <GridProvider>
       <GameProvider>
         <Header />
-        <Flex mx="auto" mt="90px" width="min(90vw, 70vh)" userSelect="none">
+        <Flex mx="auto" mt="90px" width="min(90vw, 73vh)" userSelect="none">
           <Box>
             <Grid />
             <Controls />

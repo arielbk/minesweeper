@@ -24,8 +24,8 @@ const Header: React.FC = () => {
         justifyContent="space-between"
         alignItems="center"
         mx="auto"
-        width="90%"
-        maxWidth="800px"
+        width="min(90vw, 73vh)"
+        minWidth="440px"
       >
         <Heading mb={0}>Minesweeper</Heading>
         <Settings />
