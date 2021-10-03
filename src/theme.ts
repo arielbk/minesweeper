@@ -17,6 +17,10 @@ const colors = {
 };
 
 export const theme = extendTheme({
+  config: {
+    initialColorMode: 'dark',
+    useSystemColorMode: false,
+  },
   colors,
   fonts: {
     body: 'system-ui, sans-serif',

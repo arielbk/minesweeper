@@ -48,8 +48,6 @@ const Gameface: React.FC = () => {
   useEffect(() => {
     if (!hasWon) return;
     requestAnimationFrame(confettiFrame);
-    setTimeout(() => requestAnimationFrame(confettiFrame), 1500);
-    setTimeout(() => requestAnimationFrame(confettiFrame), 3500);
   }, [hasWon]);
 
   return (
