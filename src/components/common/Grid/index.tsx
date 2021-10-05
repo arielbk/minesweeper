@@ -5,7 +5,6 @@ import React, { useContext } from 'react';
 import Cell from '../Cell';
 
 const Container = styled.div<{ width: number; height: number }>`
-  margin: 1rem auto;
   box-sizing: content-box;
   width: min(90vw, 73vh);
   height: min(90vw, 73vh);

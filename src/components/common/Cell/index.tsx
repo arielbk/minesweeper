@@ -18,14 +18,13 @@ const CellButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
   background: #ddd;
   outline: 0;
   color: red;
   font-family: 'Courier New', Courier, monospace;
 
-  &:active {
+  &:active,
+  &:focus {
     box-shadow: inset 4px 4px 8px #999;
     background: #bbb;
     outline: 0;
@@ -36,13 +35,12 @@ const CellLabel = styled.div<{ value: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
   background: ${({ value }) => (value === 'M' ? 'red' : '#777')};
   color: ${({ value }) =>
     value === 'M' ? '#000' : numberColors[parseInt(value)]};
   font-family: 'Courier New', Courier, monospace;
   font-weight: 600;
+  overflow: hidden;
 `;
 
 interface Props {

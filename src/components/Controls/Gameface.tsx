@@ -12,7 +12,8 @@ const GamefaceTile = styled.button`
   color: red;
   font-size: 36px;
 
-  &:active {
+  &:active,
+  &:focus {
     box-shadow: inset 4px 4px 8px #999;
     background: #bbb;
     outline: 0;

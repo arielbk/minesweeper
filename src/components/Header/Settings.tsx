@@ -16,7 +16,6 @@ const Settings: React.FC = () => {
     setGridLength(newDimensions);
   };
 
-  if (!startTime && !gameState?.matches('running')) return <div />;
   return (
     <Flex alignItems="center">
       <Flex fontFamily="Courier, Monospace" fontSize="1.4rem">
