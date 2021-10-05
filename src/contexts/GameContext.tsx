@@ -24,6 +24,10 @@ const defaultValues = {
   toggleFlagMode: () => {
     //
   },
+  timeElapsed: 0,
+  setTimeElapsed: (time: number) => {
+    //
+  },
 };
 
 type GameProps = {
@@ -44,6 +48,8 @@ type GameProps = {
   >;
   isFlagMode: boolean;
   toggleFlagMode: () => void;
+  timeElapsed: number;
+  setTimeElapsed: (time: number) => void;
 };
 
 export const GameContext = createContext<GameProps>(defaultValues);
@@ -53,6 +59,7 @@ export const GameProvider: React.FC = ({ children }) => {
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
   const [isFlagMode, setIsFlagMode] = useState<boolean>(false);
+  const [timeElapsed, setTimeElapsed] = useState(0);
   // todo: we are assuming that the grid is always square (for now)
   const {
     mineLocations,
@@ -87,12 +94,15 @@ export const GameProvider: React.FC = ({ children }) => {
   const handleRestart = () => {
     send('RESTART');
     setStartTime(Date.now());
+    setTimeElapsed(0);
     setIsFlagMode(false);
     resetGrids();
   };
 
   // determines what to do with selected cell
   const handleSelectCell = (cell: [number, number]) => {
+    // ensure game is running
+    send('RESUME');
     const [x, y] = cell;
     // set initial start time
     if (!startTime) setStartTime(Date.now());
@@ -123,6 +133,8 @@ export const GameProvider: React.FC = ({ children }) => {
         setIsMouseDown,
         isFlagMode,
         toggleFlagMode,
+        timeElapsed,
+        setTimeElapsed,
       }}
     >
       <>{children}</>

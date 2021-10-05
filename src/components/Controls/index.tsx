@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/layout';
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
 import { format } from 'date-fns';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { MdFlag } from 'react-icons/md';
 import Gameface from './Gameface';
 
@@ -21,21 +21,29 @@ const NumberField = styled.div`
 `;
 
 const Controls: React.FC = () => {
-  const { gameState, flagCount, startTime, toggleFlagMode, isFlagMode } =
-    useContext(GameContext);
-  const [timeElapsed, setTimeElapsed] = useState(0);
+  const {
+    gameState,
+    flagCount,
+    startTime,
+    toggleFlagMode,
+    isFlagMode,
+    timeElapsed,
+    setTimeElapsed,
+  } = useContext(GameContext);
   const intervalId = useRef<number>();
 
   const isRunning = gameState?.matches('running');
 
   useEffect(() => {
     if (!isRunning) return clearInterval(intervalId.current);
+
     intervalId.current = setInterval(() => {
       const newTime = Math.floor((Date.now() - startTime) / 1000);
       setTimeElapsed(newTime);
     }, 200) as unknown as number;
+
     return () => clearInterval(intervalId.current);
-  }, [startTime, gameState, isRunning]);
+  }, [startTime, gameState, isRunning, setTimeElapsed]);
 
   return (
     <Container>

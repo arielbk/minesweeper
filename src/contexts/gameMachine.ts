@@ -19,22 +19,28 @@ export interface GameContextType {
 
 const gameMachine = createMachine<GameContextType>({
   id: 'game',
-  initial: 'running',
+  initial: 'paused',
   states: {
+    paused: {
+      on: {
+        RESUME: 'running',
+      },
+    },
     running: {
       on: {
         LOSE: 'lost',
         WIN: 'won',
+        RESTART: 'paused',
       },
     },
     lost: {
       on: {
-        RESTART: 'running',
+        RESTART: 'paused',
       },
     },
     won: {
       on: {
-        RESTART: 'running',
+        RESTART: 'paused',
       },
     },
   },
