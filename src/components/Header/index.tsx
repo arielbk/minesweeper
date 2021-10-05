@@ -1,8 +1,8 @@
-import { useContext } from 'react';
 import { Box, Flex, Heading } from '@chakra-ui/layout';
 import { useColorMode, useTheme } from '@chakra-ui/react';
 import { GameContext } from 'contexts/GameContext';
 import { transparentize } from 'polished';
+import { useContext } from 'react';
 import Settings from './Settings';
 
 const Header: React.FC = () => {

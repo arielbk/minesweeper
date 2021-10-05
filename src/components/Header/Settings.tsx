@@ -1,13 +1,11 @@
 import { IconButton } from '@chakra-ui/button';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { Box, Flex } from '@chakra-ui/layout';
-import { GameContext } from 'contexts/GameContext';
 import { GridContext } from 'contexts/GridContext';
 import React, { useContext } from 'react';
 import { IoGridSharp, IoMoon, IoSunny } from 'react-icons/io5';
 
 const Settings: React.FC = () => {
-  const { startTime, gameState } = useContext(GameContext);
   const { gridLength, setGridLength } = useContext(GridContext);
   const { colorMode, toggleColorMode } = useColorMode();
 
