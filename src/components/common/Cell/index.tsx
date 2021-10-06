@@ -4,14 +4,15 @@ import React, { ReactElement, useContext } from 'react';
 import { FaBomb } from 'react-icons/fa';
 import { MdFlag } from 'react-icons/md';
 
-const numberColors = [
-  '#fff',
+export const numberColors = [
+  '#ccc',
   '#00EEFD',
   '#72FF4F',
   '#FF9944',
   '#00b7ff',
   '#eb3939',
   '#e16aee',
+  '#ffd500',
 ];
 
 const CellButton = styled.button`

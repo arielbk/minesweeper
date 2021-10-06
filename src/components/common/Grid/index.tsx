@@ -12,6 +12,7 @@ const Container = styled.div<{ width: number; height: number }>`
   grid-template-rows: ${({ height }) => `repeat(${height}, 1fr)`};
   grid-template-columns: ${({ width }) => `repeat(${width}, 1fr)`};
   grid-gap: ${({ width }) => Math.floor(70 / width) + 'px'};
+  touch-action: manipulation;
 `;
 
 const Grid: React.FC = () => {

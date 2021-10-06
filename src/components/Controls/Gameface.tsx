@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import confetti from 'canvas-confetti';
+import { numberColors } from 'components/common/Cell';
 import React, { useContext, useEffect } from 'react';
 import { GameContext } from '../../contexts/GameContext';
 
@@ -27,6 +28,7 @@ function confettiFrame() {
     angle: 60,
     spread: 120,
     origin: { x: 0, y: 0.8 },
+    colors: numberColors,
   });
 
   confetti({
@@ -34,6 +36,7 @@ function confettiFrame() {
     angle: 120,
     spread: 120,
     origin: { x: 1, y: 0.8 },
+    colors: numberColors,
   });
 }
 
