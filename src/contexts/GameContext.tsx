@@ -4,6 +4,7 @@ import { useMachine } from '@xstate/react';
 import gameMachine, { GameContextType } from './gameMachine';
 import { GridContext } from './GridContext';
 import { AnyEventObject, State } from 'xstate';
+import useIsAway from 'utilities/useIsAway';
 
 const defaultValues = {
   startTime: 0,
@@ -28,6 +29,9 @@ const defaultValues = {
   setTimeElapsed: (time: number) => {
     //
   },
+  togglePaused: () => {
+    //
+  },
 };
 
 type GameProps = {
@@ -50,6 +54,7 @@ type GameProps = {
   toggleFlagMode: () => void;
   timeElapsed: number;
   setTimeElapsed: (time: number) => void;
+  togglePaused: () => void;
 };
 
 export const GameContext = createContext<GameProps>(defaultValues);
@@ -71,6 +76,12 @@ export const GameProvider: React.FC = ({ children }) => {
     resetGrids,
     gridLength,
   } = useContext(GridContext);
+  const isAway = useIsAway();
+
+  // pause game if use is away
+  useEffect(() => {
+    if (isAway) send('PAUSE');
+  }, [isAway, send]);
 
   useEffect(() => {
     if (current.matches('running')) setStartTime(Date.now());
@@ -120,6 +131,10 @@ export const GameProvider: React.FC = ({ children }) => {
   };
 
   const toggleFlagMode = () => setIsFlagMode((prev) => !prev);
+  const togglePaused = () => {
+    if (current.matches('running')) send('PAUSE');
+    else send('RESUME');
+  };
 
   return (
     <GameContext.Provider
@@ -135,6 +150,7 @@ export const GameProvider: React.FC = ({ children }) => {
         toggleFlagMode,
         timeElapsed,
         setTimeElapsed,
+        togglePaused,
       }}
     >
       <>{children}</>

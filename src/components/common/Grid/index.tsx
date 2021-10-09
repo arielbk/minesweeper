@@ -4,7 +4,11 @@ import { GridContext } from 'contexts/GridContext';
 import React, { useContext } from 'react';
 import Cell from '../Cell';
 
-const Container = styled.div<{ width: number; height: number }>`
+const Container = styled.div<{
+  isPaused: boolean;
+  width: number;
+  height: number;
+}>`
   box-sizing: content-box;
   width: min(90vw, 73vh);
   height: min(90vw, 73vh);
@@ -12,39 +16,66 @@ const Container = styled.div<{ width: number; height: number }>`
   grid-template-rows: ${({ height }) => `repeat(${height}, 1fr)`};
   grid-template-columns: ${({ width }) => `repeat(${width}, 1fr)`};
   grid-gap: ${({ width }) => Math.floor(70 / width) + 'px'};
-  touch-action: manipulation;
+  transition: filter 0.1s ease-in-out;
+  ${({ isPaused }) =>
+    isPaused &&
+    `
+    filter: blur(18px);`}
+`;
+
+const PausedOverlay = styled.button`
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 3rem;
+  font-family: 'Fira Code';
+  text-transform: lowercase;
 `;
 
 const Grid: React.FC = () => {
-  const { setIsMouseDown, handleSelectCell } = useContext(GameContext);
+  const {
+    gameState,
+    setIsMouseDown,
+    handleSelectCell,
+    timeElapsed,
+    togglePaused,
+  } = useContext(GameContext);
   const { gridLength, valueGrid, isRevealedGrid, flagGrid, handleFlagCell } =
     useContext(GridContext);
+  const isPaused = !!timeElapsed && !!gameState?.matches('paused');
   return (
-    <Container
-      data-cy="grid"
-      width={gridLength}
-      height={gridLength}
-      onMouseDown={() => setIsMouseDown(true)}
-      onMouseUp={() => setIsMouseDown(false)}
-      onContextMenu={(e) => e.preventDefault()}
-    >
-      {valueGrid.map((row, y) => {
-        return row.map((cell, x) => (
-          <Cell
-            fontSize={250 / gridLength}
-            key={x}
-            value={cell}
-            isRevealed={isRevealedGrid[y][x]}
-            isFlagged={flagGrid[y][x]}
-            onFlagCell={(e) => {
-              e.preventDefault();
-              handleFlagCell([x, y]);
-            }}
-            onSelectCell={() => handleSelectCell([x, y])}
-          />
-        ));
-      })}
-    </Container>
+    <div style={{ position: 'relative' }}>
+      {isPaused && <PausedOverlay onClick={togglePaused}>Paused</PausedOverlay>}
+      <Container
+        isPaused={isPaused}
+        data-cy="grid"
+        width={gridLength}
+        height={gridLength}
+        onMouseDown={() => setIsMouseDown(true)}
+        onMouseUp={() => setIsMouseDown(false)}
+        onContextMenu={(e) => e.preventDefault()}
+      >
+        {valueGrid.map((row, y) => {
+          return row.map((cell, x) => (
+            <Cell
+              fontSize={250 / gridLength}
+              key={x}
+              value={cell}
+              isRevealed={isRevealedGrid[y][x]}
+              isFlagged={flagGrid[y][x]}
+              onFlagCell={(e) => {
+                e.preventDefault();
+                handleFlagCell([x, y]);
+              }}
+              onSelectCell={() => handleSelectCell([x, y])}
+            />
+          ));
+        })}
+      </Container>
+    </div>
   );
 };
 

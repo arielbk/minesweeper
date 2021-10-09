@@ -30,6 +30,7 @@ const Controls: React.FC = () => {
     isFlagMode,
     timeElapsed,
     setTimeElapsed,
+    togglePaused,
   } = useContext(GameContext);
   const intervalId = useRef<number>();
 
@@ -68,7 +69,14 @@ const Controls: React.FC = () => {
       </NumberField>
       <Gameface />
       <NumberField style={{ textAlign: 'right' }}>
-        {format(timeElapsed * 1000, 'm:ss')}
+        <Button
+          variant="ghost"
+          fontSize="30px"
+          align="center"
+          onClick={togglePaused}
+        >
+          {format(timeElapsed * 1000, 'm:ss')}
+        </Button>
       </NumberField>
     </Container>
   );

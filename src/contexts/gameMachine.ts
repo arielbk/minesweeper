@@ -28,6 +28,7 @@ const gameMachine = createMachine<GameContextType>({
     },
     running: {
       on: {
+        PAUSE: 'paused',
         LOSE: 'lost',
         WIN: 'won',
         RESTART: 'paused',
