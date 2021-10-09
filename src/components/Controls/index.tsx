@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/layout';
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
 import { format } from 'date-fns';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { MdFlag } from 'react-icons/md';
 import Gameface from './Gameface';
 
@@ -33,19 +33,32 @@ const Controls: React.FC = () => {
     togglePaused,
   } = useContext(GameContext);
   const intervalId = useRef<number>();
+  const [currentTimeElapsed, setCurrentTimeElapsed] = useState<number>(0);
 
   const isRunning = gameState?.matches('running');
 
   useEffect(() => {
-    if (!isRunning) return clearInterval(intervalId.current);
+    if (!isRunning) {
+      clearInterval(intervalId.current);
+      setTimeElapsed(timeElapsed + currentTimeElapsed);
+      return setCurrentTimeElapsed(0);
+    }
 
     intervalId.current = setInterval(() => {
       const newTime = Math.floor((Date.now() - startTime) / 1000);
-      setTimeElapsed(newTime);
+      setCurrentTimeElapsed(newTime);
     }, 200) as unknown as number;
 
     return () => clearInterval(intervalId.current);
-  }, [startTime, gameState, isRunning, setTimeElapsed]);
+  }, [
+    startTime,
+    gameState,
+    isRunning,
+    setCurrentTimeElapsed,
+    setTimeElapsed,
+    timeElapsed,
+    currentTimeElapsed,
+  ]);
 
   return (
     <Container>
@@ -75,7 +88,7 @@ const Controls: React.FC = () => {
           align="center"
           onClick={togglePaused}
         >
-          {format(timeElapsed * 1000, 'm:ss')}
+          {format((timeElapsed + currentTimeElapsed) * 1000, 'm:ss')}
         </Button>
       </NumberField>
     </Container>

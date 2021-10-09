@@ -1,3 +1,4 @@
+import { useTheme } from '@chakra-ui/system';
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
 import { GridContext } from 'contexts/GridContext';
@@ -31,8 +32,8 @@ const PausedOverlay = styled.button`
   width: 100%;
   height: 100%;
   font-size: 3rem;
-  font-family: 'Fira Code';
   text-transform: lowercase;
+  color: rgba(0, 0, 0, 0.3);
 `;
 
 const Grid: React.FC = () => {
@@ -45,10 +46,10 @@ const Grid: React.FC = () => {
   } = useContext(GameContext);
   const { gridLength, valueGrid, isRevealedGrid, flagGrid, handleFlagCell } =
     useContext(GridContext);
+  const theme = useTheme();
   const isPaused = !!timeElapsed && !!gameState?.matches('paused');
   return (
     <div style={{ position: 'relative' }}>
-      {isPaused && <PausedOverlay onClick={togglePaused}>Paused</PausedOverlay>}
       <Container
         isPaused={isPaused}
         data-cy="grid"
@@ -75,6 +76,14 @@ const Grid: React.FC = () => {
           ));
         })}
       </Container>
+      {isPaused && (
+        <PausedOverlay
+          style={{ fontFamily: theme.fonts.heading }}
+          onClick={togglePaused}
+        >
+          Paused
+        </PausedOverlay>
+      )}
     </div>
   );
 };
