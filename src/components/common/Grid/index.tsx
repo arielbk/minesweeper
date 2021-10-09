@@ -18,10 +18,7 @@ const Container = styled.div<{
   grid-template-columns: ${({ width }) => `repeat(${width}, 1fr)`};
   grid-gap: ${({ width }) => Math.floor(70 / width) + 'px'};
   transition: filter 0.1s ease-in-out;
-  ${({ isPaused }) =>
-    isPaused &&
-    `
-    filter: blur(18px);`}
+  ${({ isPaused }) => isPaused && `filter: blur(18px);`}
 `;
 
 const PausedOverlay = styled.button`
@@ -46,8 +43,10 @@ const Grid: React.FC = () => {
   } = useContext(GameContext);
   const { gridLength, valueGrid, isRevealedGrid, flagGrid, handleFlagCell } =
     useContext(GridContext);
+
   const theme = useTheme();
   const isPaused = !!timeElapsed && !!gameState?.matches('paused');
+
   return (
     <div style={{ position: 'relative' }}>
       <Container

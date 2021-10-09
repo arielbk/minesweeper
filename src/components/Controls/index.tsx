@@ -67,7 +67,10 @@ const Controls: React.FC = () => {
           variant="ghost"
           fontSize="30px"
           align="center"
-          onClick={toggleFlagMode}
+          onClick={() => {
+            if (!isRunning) togglePaused();
+            toggleFlagMode();
+          }}
         >
           {flagCount}
           <Box
