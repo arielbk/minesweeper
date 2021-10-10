@@ -83,6 +83,11 @@ export const GameProvider: React.FC = ({ children }) => {
     if (isAway) send('PAUSE');
   }, [isAway, send]);
 
+  // restart game if grid size changes
+  useEffect(() => {
+    handleRestart();
+  }, [gridLength]); // eslint-disable-line
+
   useEffect(() => {
     if (current.matches('running')) setStartTime(Date.now());
     // reset flag mode

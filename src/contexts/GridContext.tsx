@@ -5,7 +5,7 @@ import useValueGrid from 'hooks/useValueGrid';
 import { createContext, useCallback, useEffect } from 'react';
 
 export const GridContext = createContext({
-  gridLength: 15,
+  gridLength: 10,
   setGridLength: (dimensions: number) => {
     /* */
   },
@@ -28,7 +28,7 @@ export const GridContext = createContext({
 export const GridProvider: React.FC = ({ children }) => {
   const [gridLength, setGridLength] = useLocalStorage<number>(
     'minesweeper-grid-length',
-    15,
+    10,
   );
 
   //grid values
