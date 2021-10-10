@@ -90,8 +90,6 @@ export const GameProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (current.matches('running')) setStartTime(Date.now());
-    // reset flag mode
-    setIsFlagMode(false);
   }, [current, current.value, gridLength]);
 
   // check if we have a winner

@@ -40,12 +40,14 @@ const Controls: React.FC = () => {
   useEffect(() => {
     if (!isRunning) {
       clearInterval(intervalId.current);
-      setTimeElapsed(timeElapsed + currentTimeElapsed);
+      setTimeElapsed(
+        gameState?.matches('fresh') ? 0 : timeElapsed + currentTimeElapsed,
+      );
       return setCurrentTimeElapsed(0);
     }
 
     intervalId.current = setInterval(() => {
-      const newTime = Math.floor((Date.now() - startTime) / 1000);
+      const newTime = Date.now() - startTime;
       setCurrentTimeElapsed(newTime);
     }, 200) as unknown as number;
 
@@ -91,7 +93,7 @@ const Controls: React.FC = () => {
           align="center"
           onClick={togglePaused}
         >
-          {format((timeElapsed + currentTimeElapsed) * 1000, 'm:ss')}
+          {format(timeElapsed + currentTimeElapsed, 'm:ss')}
         </Button>
       </NumberField>
     </Container>
