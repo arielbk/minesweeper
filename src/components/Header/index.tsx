@@ -14,6 +14,7 @@ const Header: React.FC = () => {
       position="fixed"
       left="0"
       top="0"
+      px="16px"
       height="90px"
       width="100vw"
       background={
@@ -27,7 +28,6 @@ const Header: React.FC = () => {
         alignItems="center"
         mx="auto"
         width="min(90vw, 73vh)"
-        minWidth="440px"
         height="100%"
       >
         <Heading mb={0} onClick={handleRestart} cursor="pointer">
