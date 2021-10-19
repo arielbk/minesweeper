@@ -68,6 +68,7 @@ const Controls: React.FC = () => {
         <Button
           variant="ghost"
           fontSize="30px"
+          py={6}
           align="center"
           onClick={() => {
             if (!isRunning) togglePaused();
@@ -90,6 +91,7 @@ const Controls: React.FC = () => {
         <Button
           variant="ghost"
           fontSize="30px"
+          py={6}
           align="center"
           onClick={togglePaused}
         >
