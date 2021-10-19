@@ -1,16 +1,21 @@
 import { Flex } from '@chakra-ui/layout';
-import { Portal, useColorMode, useTheme } from '@chakra-ui/react';
+import { Portal, useColorMode } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 
-const Container = styled(motion.div)<{ background: string }>`
-  background: ${(props) => props.background};
+const Container = styled(motion.div)<{ isLight: boolean }>`
   height: 100vh;
   width: 200px;
   position: fixed;
   right: 0;
   top: 0;
   z-index: 9999;
+  border-left: 1px solid
+    ${(props) =>
+      props.isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255, 255, 255, 0.3)'};
+  background: ${(props) =>
+    props.isLight ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'};
+  backdrop-filter: blur(12px);
 `;
 
 const Overlay = styled(motion.div)`
@@ -19,7 +24,6 @@ const Overlay = styled(motion.div)`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.9);
 `;
 
 interface DrawerProps {
@@ -30,7 +34,6 @@ interface DrawerProps {
 
 const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, content }) => {
   const { colorMode } = useColorMode();
-  const theme = useTheme();
   return (
     <Portal>
       {isOpen && (
@@ -41,17 +44,18 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, content }) => {
         />
       )}
       <Container
-        background={colorMode === 'light' ? '#fff' : theme.colors.darkBg[500]}
+        isLight={colorMode === 'light'}
         animate={{
           x: isOpen ? '10%' : '110%',
         }}
       >
         <Flex
           py={16}
-          justifyContent="space-between"
+          justifyContent="space-around"
           alignItems="center"
           flexDirection="column"
-          height="250px"
+          height="100%"
+          fontSize="2rem"
         >
           {content}
         </Flex>

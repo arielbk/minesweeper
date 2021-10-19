@@ -19,8 +19,8 @@ const Settings: React.FC = () => {
 
   const content = (
     <>
-      <Flex fontFamily="Courier, Monospace" fontSize="1.4rem">
-        <Box fontSize="1.5rem" display="inline-block" mr={4} color="#ddd">
+      <Flex fontFamily="Courier, Monospace">
+        <Box display="inline-block" mr={4} color="#ddd">
           <label htmlFor="grid-dimensions">
             <IoGridSharp />{' '}
           </label>
@@ -43,12 +43,12 @@ const Settings: React.FC = () => {
       </Flex>
       <IconButton
         ml={4}
-        fontSize="1.4rem"
         variant="ghost"
         onClick={toggleColorMode}
         aria-label="switch color mode"
         icon={colorMode === 'light' ? <IoSunny /> : <IoMoon />}
         _focus={{ boxShadow: 'none', outline: '2px solid #ccc ' }}
+        fontSize="inherit"
       />
     </>
   );
@@ -62,6 +62,7 @@ const Settings: React.FC = () => {
             display: 'none',
           },
         }}
+        fontSize="1.5rem"
       >
         {content}
       </Flex>
