@@ -6,12 +6,14 @@ import Grid from './components/common/Grid';
 import Controls from './components/Controls';
 import { GameProvider } from './contexts/GameContext';
 
+export const responsiveWidth = "min(90vw, 73vh)";
+
 const App: React.FC = () => {
   return (
     <GridProvider>
       <GameProvider>
         <Header />
-        <Flex mx="auto" mt="90px" width="min(90vw, 73vh)" userSelect="none">
+        <Flex mx="auto" mt="90px" width={responsiveWidth} userSelect="none">
           <Box>
             <Grid />
             <Controls />
