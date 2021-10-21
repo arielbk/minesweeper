@@ -1,8 +1,10 @@
+import { useEffect, useContext } from 'react';
 import { Flex } from '@chakra-ui/layout';
 import { Portal, useColorMode } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { responsiveWidth } from 'App';
+import { GameContext } from 'contexts/GameContext';
 
 const Container = styled(motion.div)<{ isLight: boolean }>`
   height: 100vh;
@@ -35,6 +37,16 @@ interface DrawerProps {
 
 const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, content }) => {
   const { colorMode } = useColorMode();
+  const { togglePaused, gameState } = useContext(GameContext);
+  const isPaused = gameState?.matches('paused');
+
+  // pause game when drawer is opened
+  useEffect(() => {
+    if (isOpen && !isPaused) {
+      togglePaused();
+    }
+  }, [isOpen, isPaused, togglePaused]);
+
   return (
     <Portal>
       {isOpen && (
