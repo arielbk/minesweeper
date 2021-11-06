@@ -2,7 +2,7 @@ import { useEffect, useContext } from 'react';
 import { Flex } from '@chakra-ui/layout';
 import { Portal, useColorMode } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue } from 'framer-motion';
 import { responsiveWidth } from 'App';
 import { GameContext } from 'contexts/GameContext';
 
@@ -27,6 +27,7 @@ const Overlay = styled(motion.div)`
   left: 0;
   width: 100vw;
   height: 100vh;
+  background: ;
 `;
 
 interface DrawerProps {
@@ -57,9 +58,18 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, content }) => {
         />
       )}
       <Container
+        drag="x"
+        onDragEnd={(event, info) => {
+          if (info.point.x > 320) onClose();
+        }}
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={{
+          left: 0,
+          right: 0.5,
+        }}
         isLight={colorMode === 'light'}
         animate={{
-          x: isOpen ? '10%' : '110%',
+          x: isOpen ? 20 : 220,
         }}
       >
         <Flex
