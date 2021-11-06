@@ -2,7 +2,12 @@ import { useEffect, useContext } from 'react';
 import { Flex } from '@chakra-ui/layout';
 import { Portal, useColorMode } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { motion, useMotionValue } from 'framer-motion';
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useTransform,
+} from 'framer-motion';
 import { responsiveWidth } from 'App';
 import { GameContext } from 'contexts/GameContext';
 
@@ -21,13 +26,13 @@ const Container = styled(motion.div)<{ isLight: boolean }>`
   backdrop-filter: blur(12px);
 `;
 
-const Overlay = styled(motion.div)`
+const Overlay = styled(motion.div)<{ isLight: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: ;
+  background: ${(props) => (props.isLight ? '#fff' : '#000')};
 `;
 
 interface DrawerProps {
@@ -40,6 +45,8 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, content }) => {
   const { colorMode } = useColorMode();
   const { togglePaused, gameState } = useContext(GameContext);
   const isPaused = gameState?.matches('paused');
+  const x = useMotionValue(0);
+  const opacity = useTransform(x, [0, 200], [0.5, 0]);
 
   // pause game when drawer is opened
   useEffect(() => {
@@ -50,13 +57,16 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, content }) => {
 
   return (
     <Portal>
-      {isOpen && (
-        <Overlay
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          onClick={onClose}
-        />
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <Overlay
+            onClick={onClose}
+            isLight={colorMode === 'light'}
+            style={{ opacity }}
+            exit={{ opacity: 0 }}
+          />
+        )}
+      </AnimatePresence>
       <Container
         drag="x"
         onDragEnd={(event, info) => {
@@ -68,6 +78,7 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, content }) => {
           right: 0.5,
         }}
         isLight={colorMode === 'light'}
+        style={{ x }}
         animate={{
           x: isOpen ? 20 : 220,
         }}
