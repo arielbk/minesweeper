@@ -55,6 +55,15 @@ const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, content }) => {
     }
   }, [isOpen, isPaused, togglePaused]);
 
+  // block scroll when open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isOpen]);
+
   return (
     <Portal>
       <AnimatePresence>
