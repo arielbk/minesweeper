@@ -73,6 +73,7 @@ const Controls: React.FC = () => {
           onClick={() => {
             if (!isRunning) togglePaused();
             toggleFlagMode();
+            throw new Error('Fake error for Sentry test');
           }}
         >
           {flagCount}
