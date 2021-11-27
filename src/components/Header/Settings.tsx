@@ -5,6 +5,7 @@ import { GridContext } from 'contexts/GridContext';
 import React, { useContext, useState } from 'react';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { IoGridSharp, IoMoon, IoSunny } from 'react-icons/io5';
+import { BsAwardFill } from 'react-icons/bs';
 import Drawer from './Drawer';
 
 const Settings: React.FC = () => {
@@ -41,6 +42,15 @@ const Settings: React.FC = () => {
           <option value={25}>25</option>
         </select>
       </Flex>
+      <IconButton
+        ml={4}
+        variant="ghost"
+        onClick={() => console.log('high scores')}
+        aria-label="show high scores"
+        icon={<BsAwardFill />}
+        _focus={{ boxShadow: 'none', outline: '2px solid #ccc ' }}
+        fontSize="inherit"
+      />
       <IconButton
         ml={4}
         variant="ghost"
