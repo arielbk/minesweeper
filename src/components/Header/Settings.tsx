@@ -41,7 +41,7 @@ const Settings: React.FC = () => {
           <option value={15}>15</option>
         </select>
       </Flex>
-      <HighScores />
+      <HighScores closeDrawer={() => setIsDrawerOpen(false)} />
       <IconButton
         ml={4}
         variant="ghost"
