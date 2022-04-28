@@ -4,38 +4,10 @@ import { useMachine } from '@xstate/react';
 import gameMachine, { GameContextType } from './gameMachine';
 import { GridContext } from './GridContext';
 import { AnyEventObject, State } from 'xstate';
-import useIsAway from 'utilities/useIsAway';
+import useIsAway from 'hooks/useIsAway';
 import { Coordinate } from 'utilities/types';
 
-const defaultValues = {
-  startTime: 0,
-  flagCount: 0,
-  isMouseDown: false,
-
-  handleRestart: () => {
-    /* */
-  },
-  handleSelectCell: (cell: Coordinate) => {
-    /* */
-  },
-  setIsMouseDown: (isDown: boolean) => {
-    /* */
-  },
-
-  isFlagMode: false,
-  toggleFlagMode: () => {
-    //
-  },
-  timeElapsed: 0,
-  setTimeElapsed: (time: number) => {
-    //
-  },
-  togglePaused: () => {
-    //
-  },
-};
-
-type GameProps = {
+type GameContent = {
   startTime: number;
   flagCount: number;
   isMouseDown: boolean;
@@ -58,7 +30,7 @@ type GameProps = {
   togglePaused: () => void;
 };
 
-export const GameContext = createContext<GameProps>(defaultValues);
+export const GameContext = createContext({} as GameContent);
 
 export const GameProvider: React.FC = ({ children }) => {
   const [current, send] = useMachine(gameMachine);

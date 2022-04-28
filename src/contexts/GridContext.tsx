@@ -5,26 +5,20 @@ import useValueGrid from 'hooks/useValueGrid';
 import { createContext, useCallback, useEffect } from 'react';
 import { Coordinate } from 'utilities/types';
 
-export const GridContext = createContext({
-  gridLength: 10,
-  setGridLength: (dimensions: number) => {
-    /* */
-  },
-  valueGrid: [['M']],
-  mineLocations: [[0, 0]],
-  isRevealedGrid: [[false]],
-  flagGrid: [[false]],
-  flagCount: 15,
-  handleRevealCells: (cell: Coordinate[]) => {
-    //
-  },
-  handleFlagCell: (cell: Coordinate) => {
-    //
-  },
-  resetGrids: () => {
-    //
-  },
-});
+type GridContent = {
+  gridLength: number;
+  setGridLength: (dimensions: number) => void;
+  valueGrid: string[][];
+  mineLocations: Coordinate[];
+  isRevealedGrid: boolean[][];
+  flagGrid: boolean[][];
+  flagCount: number;
+  handleRevealCells: (cell: Coordinate[]) => void;
+  handleFlagCell: (cell: Coordinate) => void;
+  resetGrids: () => void;
+};
+
+export const GridContext = createContext({} as GridContent);
 
 export const GridProvider: React.FC = ({ children }) => {
   const [gridLength, setGridLength] = useLocalStorage<number>(
