@@ -3,6 +3,7 @@ import useIsRevealedGrid from 'hooks/useIsRevealedGrid';
 import useLocalStorage from 'hooks/useLocalStorage';
 import useValueGrid from 'hooks/useValueGrid';
 import { createContext, useCallback, useEffect } from 'react';
+import { Coordinate } from 'utilities/types';
 
 export const GridContext = createContext({
   gridLength: 10,
@@ -14,10 +15,10 @@ export const GridContext = createContext({
   isRevealedGrid: [[false]],
   flagGrid: [[false]],
   flagCount: 15,
-  handleRevealCells: (cell: [number, number][]) => {
+  handleRevealCells: (cell: Coordinate[]) => {
     //
   },
-  handleFlagCell: (cell: [number, number]) => {
+  handleFlagCell: (cell: Coordinate) => {
     //
   },
   resetGrids: () => {

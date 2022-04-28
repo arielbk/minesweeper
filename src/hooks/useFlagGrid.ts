@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { Coordinate } from 'utilities/types';
 
 interface GridParams {
   gridLength: number;
@@ -7,7 +8,7 @@ interface GridParams {
 
 interface FlagGrid {
   flagGrid: boolean[][];
-  handleFlagCell: (cell: [number, number]) => void;
+  handleFlagCell: (cell: Coordinate) => void;
   flagCount: number;
   reset: () => void;
 }
@@ -22,7 +23,7 @@ const useFlagGrid = ({ gridLength, mineCount }: GridParams): FlagGrid => {
   }, [mineCount, gridLength]);
 
   // toggles flag cell
-  const handleFlagCell = (cell: [number, number]): void => {
+  const handleFlagCell = (cell: Coordinate): void => {
     const [x, y] = cell;
     const flagGridCopy = flagGrid.map((row) => row.map((col) => col));
     flagGridCopy[y][x] = !flagGridCopy[y][x];

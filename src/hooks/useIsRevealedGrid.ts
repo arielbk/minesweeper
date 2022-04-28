@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { Coordinate } from 'utilities/types';
 
 interface GridParams {
   gridLength: number;
@@ -6,7 +7,7 @@ interface GridParams {
 
 interface IsRevealedGrid {
   isRevealedGrid: boolean[][];
-  handleRevealCells: (cells: [number, number][]) => void;
+  handleRevealCells: (cells: Coordinate[]) => void;
   reset: () => void;
 }
 
@@ -22,7 +23,7 @@ const useIsRevealedGrid = ({ gridLength }: GridParams): IsRevealedGrid => {
   }, [gridLength]);
 
   // sets cells to revealed
-  const handleRevealCells = (cells: [number, number][]): void => {
+  const handleRevealCells = (cells: Coordinate[]): void => {
     const isRevealedCopy = isRevealedGrid.map((row) => row.map((col) => col));
     cells.forEach(([x, y]) => {
       isRevealedCopy[y][x] = true;

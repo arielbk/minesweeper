@@ -1,6 +1,8 @@
+import { Coordinate } from './types';
+
 export const calculateAdjacentMineCount = (
   loc: number[],
-  mines: [number, number][],
+  mines: Coordinate[],
 ): string => {
   let count = 0;
   mines.forEach((mine) => {
@@ -17,8 +19,8 @@ export const calculateAdjacentMineCount = (
 };
 
 export const isCoordinateAdjacent = (
-  center: [number, number],
-  toCheck: [number, number],
+  center: Coordinate,
+  toCheck: Coordinate,
 ): boolean => {
   return (
     (toCheck[0] === center[0] ||
@@ -32,12 +34,12 @@ export const isCoordinateAdjacent = (
 
 // returns adjacent coordinates that are still within the grid
 const getAdjacentCellCoordinates = (
-  [x, y]: [number, number],
+  [x, y]: Coordinate,
   width: number,
   height: number,
-): [number, number][] => {
+): Coordinate[] => {
   // begin with all adjacent coordinates
-  const coordinates: [number, number][] = [
+  const coordinates: Coordinate[] = [
     [x - 1, y - 1],
     [x, y - 1],
     [x + 1, y - 1],
@@ -58,19 +60,19 @@ const getAdjacentCellCoordinates = (
 
 // start this find contiguous area
 export const findContiguousArea = (
-  [x, y]: [number, number],
+  [x, y]: Coordinate,
   valueGrid: string[][],
-): [number, number][] => {
+): Coordinate[] => {
   // starts with the current cell to be revealed
-  const cellsToReveal: [number, number][] = [[x, y]];
-  const cellsToCheck: [number, number][] = [[x, y]];
-  const cellsChecked: [number, number][] = [];
+  const cellsToReveal: Coordinate[] = [[x, y]];
+  const cellsToCheck: Coordinate[] = [[x, y]];
+  const cellsChecked: Coordinate[] = [];
 
-  const isEmptyCell = (cell: [number, number]): boolean => {
+  const isEmptyCell = (cell: Coordinate): boolean => {
     return valueGrid[cell[1]][cell[0]] === '0';
   };
 
-  const getRemainingCells = (toCheck: [number, number][]) =>
+  const getRemainingCells = (toCheck: Coordinate[]) =>
     toCheck
       .map((cell) => JSON.stringify(cell))
       .filter(

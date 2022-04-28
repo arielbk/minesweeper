@@ -5,6 +5,7 @@ import gameMachine, { GameContextType } from './gameMachine';
 import { GridContext } from './GridContext';
 import { AnyEventObject, State } from 'xstate';
 import useIsAway from 'utilities/useIsAway';
+import { Coordinate } from 'utilities/types';
 
 const defaultValues = {
   startTime: 0,
@@ -14,7 +15,7 @@ const defaultValues = {
   handleRestart: () => {
     /* */
   },
-  handleSelectCell: (cell: [number, number]) => {
+  handleSelectCell: (cell: Coordinate) => {
     /* */
   },
   setIsMouseDown: (isDown: boolean) => {
@@ -39,7 +40,7 @@ type GameProps = {
   flagCount: number;
   isMouseDown: boolean;
   handleRestart: () => void;
-  handleSelectCell: (cell: [number, number]) => void;
+  handleSelectCell: (cell: Coordinate) => void;
   setIsMouseDown: (isDown: boolean) => void;
   gameState?: State<
     GameContextType,
@@ -114,7 +115,7 @@ export const GameProvider: React.FC = ({ children }) => {
   };
 
   // determines what to do with selected cell
-  const handleSelectCell = (cell: [number, number]) => {
+  const handleSelectCell = (cell: Coordinate) => {
     // ensure game is running
     send('RESUME');
     const [x, y] = cell;
