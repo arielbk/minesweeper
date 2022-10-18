@@ -1,14 +1,14 @@
 # Minesweeper
 
-    The game we know and love from Windows 95 days -- this was fun to make and I'll probably come back to it to improve on it.
+A fun side project to recreate the classic Minesweeper game in the browser.
 
 ## Tech
 
 - Create-React-App for initial scaffolding
 - Emotion for CSS-in-JS styling
-- Chakra-UI for base component library
-- TypeScript for developer experience
-- XState to try out infinite state machines
+- Chakra-UI as a base component library
+- TypeScript for type safety and developer experience
+- A touch of XState to try out finite state machines
 
 ## Available Scripts
 
