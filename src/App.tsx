@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/layout';
+import { Box, Flex } from '@chakra-ui/react';
 import Header from 'components/Header';
 import { GridProvider } from 'contexts/GridContext';
 import React from 'react';

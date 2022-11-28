@@ -1,4 +1,4 @@
-import { useTheme } from '@chakra-ui/system';
+import { useTheme } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
 import { GridContext } from 'contexts/GridContext';

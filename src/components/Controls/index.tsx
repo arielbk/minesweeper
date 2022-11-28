@@ -1,5 +1,5 @@
-import { Button } from '@chakra-ui/button';
 import { Box } from '@chakra-ui/layout';
+import { Button } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
 import { format } from 'date-fns';
