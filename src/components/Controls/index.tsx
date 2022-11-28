@@ -69,7 +69,7 @@ const Controls: React.FC = () => {
           variant="ghost"
           fontSize="30px"
           py={6}
-          align="center"
+          textAlign="center"
           onClick={() => {
             if (!isRunning) togglePaused();
             toggleFlagMode();
@@ -93,7 +93,7 @@ const Controls: React.FC = () => {
           variant="ghost"
           fontSize="30px"
           py={6}
-          align="center"
+          textAlign="center"
           onClick={togglePaused}
         >
           {format(timeElapsed + currentTimeElapsed, 'm:ss')}

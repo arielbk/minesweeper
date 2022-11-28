@@ -2,7 +2,7 @@ import useFlagGrid from 'hooks/useFlagGrid';
 import useIsRevealedGrid from 'hooks/useIsRevealedGrid';
 import useLocalStorage from 'hooks/useLocalStorage';
 import useValueGrid from 'hooks/useValueGrid';
-import { createContext, useCallback, useEffect } from 'react';
+import React, { createContext, useCallback, useEffect } from 'react';
 import { Coordinate } from 'utilities/types';
 
 type GridContent = {
@@ -20,7 +20,9 @@ type GridContent = {
 
 export const GridContext = createContext({} as GridContent);
 
-export const GridProvider: React.FC = ({ children }) => {
+export const GridProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [gridLength, setGridLength] = useLocalStorage<number>(
     'minesweeper-grid-length',
     10,

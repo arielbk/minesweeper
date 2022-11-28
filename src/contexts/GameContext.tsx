@@ -32,7 +32,9 @@ type GameContent = {
 
 export const GameContext = createContext({} as GameContent);
 
-export const GameProvider: React.FC = ({ children }) => {
+export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [current, send] = useMachine(gameMachine);
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
