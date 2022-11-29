@@ -45,7 +45,7 @@ const Grid: React.FC = () => {
     useContext(GridContext);
 
   const theme = useTheme();
-  const isPaused = !!timeElapsed && !!gameState?.matches('paused');
+  const isPaused = !!timeElapsed && gameState === 'PAUSED';
 
   return (
     <div style={{ position: 'relative' }}>

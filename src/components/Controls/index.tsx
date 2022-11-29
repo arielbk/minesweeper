@@ -35,13 +35,13 @@ const Controls: React.FC = () => {
   const intervalId = useRef<number>();
   const [currentTimeElapsed, setCurrentTimeElapsed] = useState<number>(0);
 
-  const isRunning = gameState?.matches('running');
+  const isRunning = gameState === 'RUNNING';
 
   useEffect(() => {
     if (!isRunning) {
       clearInterval(intervalId.current);
       setTimeElapsed(
-        gameState?.matches('fresh') ? 0 : timeElapsed + currentTimeElapsed,
+        gameState === 'FRESH' ? 0 : timeElapsed + currentTimeElapsed,
       );
       return setCurrentTimeElapsed(0);
     }

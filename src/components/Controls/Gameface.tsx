@@ -44,15 +44,13 @@ const Gameface: React.FC = () => {
   const { gameState, handleRestart, isMouseDown } = useContext(GameContext);
   let face = '🙂';
   if (isMouseDown) face = '😮';
-  const hasLost = gameState?.matches('lost');
-  const hasWon = gameState?.matches('won');
-  if (hasLost) face = '😵';
-  if (hasWon) face = '😎';
+  if (gameState === 'LOST') face = '😵';
+  if (gameState === 'WON') face = '😎';
 
   useEffect(() => {
-    if (!hasWon) return;
+    if (gameState !== 'WON') return;
     requestAnimationFrame(confettiFrame);
-  }, [hasWon]);
+  }, [gameState]);
 
   return (
     <GamefaceTile onClick={handleRestart}>

@@ -9,7 +9,7 @@ interface GridParams {
 interface ValueGrid {
   valueGrid: string[][];
   mineLocations: Coordinate[];
-  reset: () => void;
+  resetValues: () => void;
 }
 
 const useValueGrid = ({ gridLength }: GridParams): ValueGrid => {
@@ -58,7 +58,7 @@ const useValueGrid = ({ gridLength }: GridParams): ValueGrid => {
     setValueGrid(valuesToSet);
   }, [gridLength]);
 
-  return { valueGrid, mineLocations, reset: initializeGrid };
+  return { valueGrid, mineLocations, resetValues: initializeGrid };
 };
 
 export default useValueGrid;

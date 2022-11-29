@@ -44,7 +44,7 @@ interface DrawerProps {
 const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, content }) => {
   const { colorMode } = useColorMode();
   const { togglePaused, gameState } = useContext(GameContext);
-  const isPaused = gameState?.matches('paused');
+  const isPaused = gameState === 'PAUSED';
   const x = useMotionValue(0);
   const opacity = useTransform(x, [0, 200], [0.5, 0]);
 

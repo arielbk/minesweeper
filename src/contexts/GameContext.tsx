@@ -1,11 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { findContiguousArea } from 'utilities/mineCoordinates';
-import { useMachine } from '@xstate/react';
-import gameMachine, { GameContextType } from './gameMachine';
-import { GridContext } from './GridContext';
-import { AnyEventObject, State } from 'xstate';
 import useIsAway from 'hooks/useIsAway';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { findContiguousArea } from 'utilities/mineCoordinates';
 import { Coordinate } from 'utilities/types';
+import { GridContext } from './GridContext';
+
+type GameState = 'FRESH' | 'PAUSED' | 'RUNNING' | 'LOST' | 'WON';
 
 type GameContent = {
   startTime: number;
@@ -14,15 +13,7 @@ type GameContent = {
   handleRestart: () => void;
   handleSelectCell: (cell: Coordinate) => void;
   setIsMouseDown: (isDown: boolean) => void;
-  gameState?: State<
-    GameContextType,
-    AnyEventObject,
-    any, // eslint-disable-line
-    {
-      value: any; // eslint-disable-line
-      context: GameContextType;
-    }
-  >;
+  gameState?: GameState;
   isFlagMode: boolean;
   toggleFlagMode: () => void;
   timeElapsed: number;
@@ -35,7 +26,7 @@ export const GameContext = createContext({} as GameContent);
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [current, send] = useMachine(gameMachine);
+  const [gameState, setGameState] = useState<GameState>('FRESH');
   const [startTime, setStartTime] = useState<number>(0);
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
   const [isFlagMode, setIsFlagMode] = useState<boolean>(false);
@@ -55,8 +46,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // pause game if use is away
   useEffect(() => {
-    if (isAway) send('PAUSE');
-  }, [isAway, send]);
+    if (isAway) setGameState('PAUSED');
+  }, [isAway]);
 
   // restart game if grid size changes
   useEffect(() => {
@@ -64,8 +55,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [gridLength]); // eslint-disable-line
 
   useEffect(() => {
-    if (current.matches('running')) setStartTime(Date.now());
-  }, [current, current.value, gridLength]);
+    if (gameState === 'RUNNING') setStartTime(Date.now());
+  }, [gameState, gridLength]);
 
   // check if we have a winner
   useEffect(() => {
@@ -76,12 +67,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       return flagGrid[y][x];
     });
     // set winner state
-    if (allFlagged) send('WIN');
+    if (allFlagged) setGameState('WON');
     // todo: reveal all cells but mine bg should not be red
-  }, [flagCount, flagGrid, mineLocations, current, send]);
+  }, [flagCount, flagGrid, mineLocations]);
 
   const handleRestart = () => {
-    send('RESTART');
+    setGameState('FRESH');
     setStartTime(Date.now());
     setTimeElapsed(0);
     setIsFlagMode(false);
@@ -91,18 +82,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   // determines what to do with selected cell
   const handleSelectCell = (cell: Coordinate) => {
     // ensure game is running
-    send('RESUME');
+    setGameState('RUNNING');
     const [x, y] = cell;
     // set initial start time
     if (!startTime) setStartTime(Date.now());
     // ignore if dead, already revealed, or flagged
-    if (
-      current.matches('lost') ||
-      isRevealedGrid[y][x] === true ||
-      flagGrid[y][x]
-    )
+    if (gameState === 'LOST' || isRevealedGrid[y][x] === true || flagGrid[y][x])
       return;
-    if (valueGrid[y][x] === 'M') send('LOSE');
+    if (valueGrid[y][x] === 'M') setGameState('LOST');
     if (valueGrid[y][x] !== '0') return handleRevealCells([[x, y]]);
     const toReveal = findContiguousArea([x, y], valueGrid);
     handleRevealCells(toReveal);
@@ -110,14 +97,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const toggleFlagMode = () => setIsFlagMode((prev) => !prev);
   const togglePaused = () => {
-    if (current.matches('running')) send('PAUSE');
-    else send('RESUME');
+    if (gameState === 'RUNNING') setGameState('PAUSED');
+    else setGameState('RUNNING');
   };
 
   return (
     <GameContext.Provider
       value={{
-        gameState: current,
+        gameState,
         isMouseDown,
         startTime,
         flagCount,

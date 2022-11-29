@@ -1,7 +1,7 @@
-import useFlagGrid from 'hooks/useFlagGrid';
-import useIsRevealedGrid from 'hooks/useIsRevealedGrid';
+import useFlagGrid from 'hooks/grids/useFlagGrid';
+import useIsRevealedGrid from 'hooks/grids/useIsRevealedGrid';
 import useLocalStorage from 'hooks/useLocalStorage';
-import useValueGrid from 'hooks/useValueGrid';
+import useValueGrid from 'hooks/grids/useValueGrid';
 import React, { createContext, useCallback, useEffect } from 'react';
 import { Coordinate } from 'utilities/types';
 
@@ -30,11 +30,7 @@ export const GridProvider: React.FC<{ children: React.ReactNode }> = ({
 
   //grid values
   const gridParams = { gridLength };
-  const {
-    valueGrid,
-    mineLocations,
-    reset: resetValues,
-  } = useValueGrid(gridParams);
+  const { valueGrid, mineLocations, resetValues } = useValueGrid(gridParams);
   const {
     isRevealedGrid,
     handleRevealCells,
