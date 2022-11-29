@@ -15,7 +15,8 @@ type GridContent = {
   flagCount: number;
   handleRevealCells: (cell: Coordinate[]) => void;
   handleFlagCell: (cell: Coordinate) => void;
-  resetGrids: () => void;
+  resetUserGrids: () => void;
+  resetValueGrid: (cell: Coordinate) => string[][];
 };
 
 export const GridContext = createContext({} as GridContent);
@@ -46,16 +47,16 @@ export const GridProvider: React.FC<{ children: React.ReactNode }> = ({
     mineCount: mineLocations.length,
   });
 
-  const resetGrids = useCallback(() => {
-    resetValues();
+  const resetUserGrids = useCallback(() => {
     resetRevealed();
     resetFlags();
-  }, [resetValues, resetRevealed, resetFlags]);
+  }, [resetRevealed, resetFlags]);
 
   // reset grids on start or settings change
   useEffect(() => {
-    resetGrids();
-  }, [gridLength, resetGrids]);
+    resetValues();
+    resetUserGrids();
+  }, [gridLength, resetUserGrids, resetValues]);
 
   return (
     <GridContext.Provider
@@ -69,7 +70,8 @@ export const GridProvider: React.FC<{ children: React.ReactNode }> = ({
         flagCount,
         handleRevealCells,
         handleFlagCell,
-        resetGrids,
+        resetUserGrids,
+        resetValueGrid: resetValues,
       }}
     >
       {children}

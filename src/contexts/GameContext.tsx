@@ -6,7 +6,7 @@ import { GridContext } from './GridContext';
 
 type GameState = 'FRESH' | 'PAUSED' | 'RUNNING' | 'LOST' | 'WON';
 
-type GameContent = {
+type GameValues = {
   startTime: number;
   flagCount: number;
   isMouseDown: boolean;
@@ -21,7 +21,7 @@ type GameContent = {
   togglePaused: () => void;
 };
 
-export const GameContext = createContext({} as GameContent);
+export const GameContext = createContext({} as GameValues);
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -39,7 +39,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     isRevealedGrid,
     valueGrid,
     handleRevealCells,
-    resetGrids,
+    resetUserGrids,
+    resetValueGrid,
     gridLength,
   } = useContext(GridContext);
   const isAway = useIsAway();
@@ -76,22 +77,26 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     setStartTime(Date.now());
     setTimeElapsed(0);
     setIsFlagMode(false);
-    resetGrids();
+    resetUserGrids();
   };
 
   // determines what to do with selected cell
   const handleSelectCell = (cell: Coordinate) => {
-    // ensure game is running
-    setGameState('RUNNING');
+    // use value state if game already started, otherwise use returned value
+    let gridValues = valueGrid;
+    if (gameState === 'FRESH') {
+      gridValues = resetValueGrid(cell);
+      setGameState('RUNNING');
+    }
     const [x, y] = cell;
     // set initial start time
     if (!startTime) setStartTime(Date.now());
     // ignore if dead, already revealed, or flagged
     if (gameState === 'LOST' || isRevealedGrid[y][x] === true || flagGrid[y][x])
       return;
-    if (valueGrid[y][x] === 'M') setGameState('LOST');
-    if (valueGrid[y][x] !== '0') return handleRevealCells([[x, y]]);
-    const toReveal = findContiguousArea([x, y], valueGrid);
+    if (gridValues[y][x] === 'M') setGameState('LOST');
+    if (gridValues[y][x] !== '0') return handleRevealCells([[x, y]]);
+    const toReveal = findContiguousArea([x, y], gridValues);
     handleRevealCells(toReveal);
   };
 

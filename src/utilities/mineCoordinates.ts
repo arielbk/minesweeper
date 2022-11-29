@@ -33,7 +33,7 @@ export const isCoordinateAdjacent = (
 };
 
 // returns adjacent coordinates that are still within the grid
-const getAdjacentCellCoordinates = (
+export const getAdjacentCellCoordinates = (
   [x, y]: Coordinate,
   width: number,
   height: number,
