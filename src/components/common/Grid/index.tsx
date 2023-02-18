@@ -2,7 +2,9 @@ import { useTheme } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
 import { GridContext } from 'contexts/GridContext';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { calculateDistance } from 'utilities/mineCoordinates';
+import { Coordinate } from 'utilities/types';
 import Cell from '../Cell';
 
 const Container = styled.div<{
@@ -47,6 +49,7 @@ const Grid: React.FC = () => {
   const theme = useTheme();
   const isPaused = !!timeElapsed && gameState === 'PAUSED';
 
+  const [lastSelected, setLastSelected] = useState<Coordinate>();
   return (
     <div style={{ position: 'relative' }}>
       <Container
@@ -59,20 +62,29 @@ const Grid: React.FC = () => {
         onContextMenu={(e) => e.preventDefault()}
       >
         {valueGrid.map((row, y) => {
-          return row.map((cell, x) => (
-            <Cell
-              fontSize={250 / gridLength}
-              key={x}
-              value={cell}
-              isRevealed={isRevealedGrid[y][x]}
-              isFlagged={flagGrid[y][x]}
-              onFlagCell={(e) => {
-                e.preventDefault();
-                handleFlagCell([x, y]);
-              }}
-              onSelectCell={() => handleSelectCell([x, y])}
-            />
-          ));
+          return row.map((cell, x) => {
+            const distanceFromLastSelected = lastSelected
+              ? calculateDistance(lastSelected, [x, y])
+              : 0;
+            return (
+              <Cell
+                distanceFromLastSelected={distanceFromLastSelected}
+                fontSize={250 / gridLength}
+                key={x}
+                value={cell}
+                isRevealed={isRevealedGrid[y][x]}
+                isFlagged={flagGrid[y][x]}
+                onFlagCell={(e) => {
+                  e.preventDefault();
+                  handleFlagCell([x, y]);
+                }}
+                onSelectCell={() => {
+                  setLastSelected([x, y]);
+                  handleSelectCell([x, y]);
+                }}
+              />
+            );
+          });
         })}
       </Container>
       {isPaused && (

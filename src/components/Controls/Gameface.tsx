@@ -5,13 +5,14 @@ import React, { useContext, useEffect } from 'react';
 import { GameContext } from '../../contexts/GameContext';
 
 const GamefaceTile = styled.button`
-  vertical-align: top;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 60px;
   height: 60px;
   outline: 0;
   color: red;
-  font-size: 36px;
+  font-size: 48px;
 
   &:active,
   &:focus {

@@ -109,3 +109,9 @@ export const findContiguousArea = (
 
   return cellsToReveal;
 };
+
+export const calculateDistance = (from: Coordinate, to: Coordinate) => {
+  const xDiff = Math.abs(from[0] - to[0]);
+  const yDiff = Math.abs(from[1] - to[1]);
+  return Math.max(xDiff, yDiff);
+};
