@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { GameContext } from 'contexts/GameContext';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { ReactElement, useContext } from 'react';
 import { FaBomb } from 'react-icons/fa';
 import { MdFlag } from 'react-icons/md';
@@ -15,7 +16,17 @@ export const numberColors = [
   '#ffd500',
 ];
 
-const CellButton = styled.button`
+const Container = styled.div`
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+`;
+
+const CellButton = styled(motion.button)`
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,6 +53,8 @@ const CellLabel = styled.div<{ value: string }>`
   font-family: 'Courier New', Courier, monospace;
   font-weight: 600;
   overflow: hidden;
+  height: 100%;
+  width: 100%;
 `;
 
 interface Props {
@@ -51,6 +64,7 @@ interface Props {
   onSelectCell: () => void;
   isFlagged: boolean;
   onFlagCell: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  distanceFromLastSelected: number;
 }
 
 const Cell: React.FC<Props> = ({
@@ -60,27 +74,50 @@ const Cell: React.FC<Props> = ({
   onSelectCell,
   isFlagged,
   onFlagCell,
+  distanceFromLastSelected,
 }) => {
   const { isFlagMode } = useContext(GameContext);
   let label: string | ReactElement = value;
   if (value === 'M') label = <FaBomb />;
   if (value === '0') label = '';
-  return isRevealed ? (
-    <CellLabel style={{ fontSize }} value={value}>
-      {label}
-    </CellLabel>
-  ) : (
-    <CellButton
-      style={{ fontSize }}
-      onContextMenu={onFlagCell}
-      onClick={(e) =>
-        isFlagMode || e.shiftKey ? onFlagCell(e) : onSelectCell()
-      }
-    >
-      {isFlagged ? <MdFlag /> : ''}
-      {process.env.REACT_APP_DEBUG_MODE ? label : ''}
-    </CellButton>
+
+  return (
+    <Container>
+      <AnimatePresence custom={distanceFromLastSelected}>
+        {!isRevealed && (
+          <CellButton
+            custom={distanceFromLastSelected}
+            variants={variants}
+            initial="default"
+            exit="exit"
+            style={{ fontSize }}
+            onContextMenu={onFlagCell}
+            onClick={(e) =>
+              isFlagMode || e.shiftKey ? onFlagCell(e) : onSelectCell()
+            }
+          >
+            {isFlagged ? <MdFlag /> : ''}
+            {process.env.REACT_APP_DEBUG_MODE ? label : ''}
+          </CellButton>
+        )}
+      </AnimatePresence>
+      <CellLabel style={{ fontSize }} value={value}>
+        {label}
+      </CellLabel>
+    </Container>
   );
+};
+
+const variants = {
+  default: { scale: 1 },
+  exit: (distance: number) => ({
+    scale: 0,
+    rotate: 360,
+    transition: {
+      duration: 0.1,
+      delay: 0.05 * distance,
+    },
+  }),
 };
 
 export default Cell;
